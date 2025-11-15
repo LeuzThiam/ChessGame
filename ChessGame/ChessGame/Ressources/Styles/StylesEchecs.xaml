@@ -1,12 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Styles partagés pour l'interface d'échecs -->
 
-namespace ChessGame.Ressources.Styles
-{
-class StylesEchecs
-{
-}
-}
+    <!-- Conteneur principal utilisé autour des panneaux -->
+    <Style x:Key="SectionContainer" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource FondSecondaireBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BordureBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <!-- Titre secondaire (utilisé dans les panneaux) -->
+    <Style x:Key="TexteSousTitre" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource PolicePrincipale}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextePrincipalBrush}" />
+        <Setter Property="Margin" Value="0,10,0,5" />
+    </Style>
+
+    <!-- Style pour les coordonnées de l'échiquier -->
+    <Style x:Key="CoordonneeEchiquier" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource PolicePrincipale}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextePrincipalBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Opacity" Value="0.85" />
+    </Style>
+
+    <!-- Couleurs additionnelles utilisées pour les indications du plateau -->
+    <SolidColorBrush x:Key="CaseSelectionAlternativeBrush" Color="#FFCC00" />
+    <SolidColorBrush x:Key="CaseSurbrillanceCaptureBrush" Color="#F39C12" />
+</ResourceDictionary>

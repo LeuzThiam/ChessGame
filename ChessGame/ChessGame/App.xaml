@@ -1,9 +1,9 @@
-﻿<Application x:Class="ChessGame.App"
+<Application x:Class="ChessGame.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ChessGame"
              xmlns:convertisseurs="clr-namespace:ChessGame.Convertisseurs"
-             StartupUri="Views/FenetrePrincipale.xaml">
+             StartupUri="Views/MainWindow.xaml">
 
     <Application.Resources>
         <ResourceDictionary>

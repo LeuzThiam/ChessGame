@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using ChessGame.ChessGame.ViewModels;
+using System.Windows;
 using ChessGame.ViewModels;
 
 namespace ChessGame.Views
