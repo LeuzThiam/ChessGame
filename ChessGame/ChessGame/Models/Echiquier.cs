@@ -36,12 +36,12 @@ namespace ChessGame.Models
         /// <summary>
         /// Roi blanc
         /// </summary>
-        public Roi? RoiBlanc { get; private set; }
+        public Roi? RoiBlanc { get; set; }
 
         /// <summary>
         /// Roi noir
         /// </summary>
-        public Roi? RoiNoir { get; private set; }
+        public Roi? RoiNoir { get; set; }
 
         #endregion
 
@@ -166,6 +166,18 @@ namespace ChessGame.Models
             Cases[ligne, colonne].PlacerPiece(piece);
             piece.Ligne = ligne;
             piece.Colonne = colonne;
+
+            if (piece is Roi roi)
+            {
+                if (roi.Couleur == CouleurPiece.Blanc)
+                {
+                    RoiBlanc = roi;
+                }
+                else
+                {
+                    RoiNoir = roi;
+                }
+            }
         }
 
         /// <summary>
