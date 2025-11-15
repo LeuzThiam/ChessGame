@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ChessGame.Views.EchiquierView"
+<UserControl x:Class="ChessGame.Views.EchiquierView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -43,7 +43,7 @@
 
         <!-- Coordonnées colonnes (haut) -->
         <ItemsControl Grid.Row="0" Grid.Column="1"
-                      ItemsSource="{Binding CoordonneesColo nnes}">
+                      ItemsSource="{Binding CoordonneesColonnes}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="1" Columns="8"/>
@@ -52,19 +52,14 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource CoordonneeEchiquier}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
         <!-- Coordonnées colonnes (bas) -->
         <ItemsControl Grid.Row="2" Grid.Column="1"
-                      ItemsSource="{Binding CoordonneesColo nnes}">
+                      ItemsSource="{Binding CoordonneesColonnes}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="1" Columns="8"/>
@@ -73,12 +68,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource CoordonneeEchiquier}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -94,12 +84,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource CoordonneeEchiquier}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -115,12 +100,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
+                               Style="{StaticResource CoordonneeEchiquier}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
