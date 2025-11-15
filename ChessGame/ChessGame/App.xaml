@@ -1,0 +1,169 @@
+﻿<Application x:Class="ChessGame.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ChessGame"
+             xmlns:convertisseurs="clr-namespace:ChessGame.Convertisseurs"
+             StartupUri="Views/FenetrePrincipale.xaml">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Importer les styles personnalisés -->
+                <ResourceDictionary Source="Ressources/Styles/StylesEchecs.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ===== CONVERTISSEURS ===== -->
+            <convertisseurs:PieceVersImageConvertisseur x:Key="PieceVersImageConvertisseur"/>
+            <convertisseurs:CouleurVersPinceauConvertisseur x:Key="CouleurVersPinceauConvertisseur"/>
+            <convertisseurs:BoolVersVisibiliteConvertisseur x:Key="BoolVersVisibiliteConvertisseur"/>
+
+            <!-- ===== COULEURS DE BASE ===== -->
+            <SolidColorBrush x:Key="CaseClaireBrush" Color="#F0D9B5"/>
+            <SolidColorBrush x:Key="CaseFonceeBrush" Color="#B58863"/>
+            <SolidColorBrush x:Key="CaseSelectionneBrush" Color="#FFFF00"/>
+            <SolidColorBrush x:Key="CoupPossibleBrush" Color="#90EE90"/>
+            <SolidColorBrush x:Key="EchecBrush" Color="#FF6B6B"/>
+            <SolidColorBrush x:Key="DernierCoupBrush" Color="#FFE082"/>
+
+            <!-- Couleurs UI -->
+            <SolidColorBrush x:Key="FondPrincipalBrush" Color="#2C3E50"/>
+            <SolidColorBrush x:Key="FondSecondaireBrush" Color="#34495E"/>
+            <SolidColorBrush x:Key="TextePrincipalBrush" Color="#ECF0F1"/>
+            <SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
+            <SolidColorBrush x:Key="BordureBrush" Color="#1A252F"/>
+
+            <!-- ===== POLICES ===== -->
+            <FontFamily x:Key="PolicePrincipale">Segoe UI</FontFamily>
+            <FontFamily x:Key="PoliceMonospace">Consolas</FontFamily>
+
+            <System:Double x:Key="TaillePoliceTitre" xmlns:System="clr-namespace:System;assembly=mscorlib">24</System:Double>
+            <System:Double x:Key="TaillePoliceNormale" xmlns:System="clr-namespace:System;assembly=mscorlib">14</System:Double>
+            <System:Double x:Key="TaillePolicePetite" xmlns:System="clr-namespace:System;assembly=mscorlib">12</System:Double>
+
+            <!-- ===== STYLES DE BOUTONS ===== -->
+            <Style x:Key="BoutonPrincipal" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontFamily" Value="{StaticResource PolicePrincipale}"/>
+                <Setter Property="FontSize" Value="{StaticResource TaillePoliceNormale}"/>
+                <Setter Property="Padding" Value="15,8"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="5"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#2980B9"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#21618C"/>
+                    </Trigger>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Background" Value="#95A5A6"/>
+                        <Setter Property="Cursor" Value="Arrow"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="BoutonSecondaire" TargetType="Button" BasedOn="{StaticResource BoutonPrincipal}">
+                <Setter Property="Background" Value="{StaticResource FondSecondaireBrush}"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#465669"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- ===== STYLES DE TEXTE ===== -->
+            <Style x:Key="TexteTitre" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource PolicePrincipale}"/>
+                <Setter Property="FontSize" Value="{StaticResource TaillePoliceTitre}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{StaticResource TextePrincipalBrush}"/>
+            </Style>
+
+            <Style x:Key="TexteNormal" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource PolicePrincipale}"/>
+                <Setter Property="FontSize" Value="{StaticResource TaillePoliceNormale}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextePrincipalBrush}"/>
+            </Style>
+
+            <Style x:Key="TexteInfo" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{StaticResource PoliceMonospace}"/>
+                <Setter Property="FontSize" Value="{StaticResource TaillePolicePetite}"/>
+                <Setter Property="Foreground" Value="#95A5A6"/>
+            </Style>
+
+            <!-- ===== STYLES DE PANELS ===== -->
+            <Style x:Key="PanneauPrincipal" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource FondSecondaireBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BordureBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="15"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+
+            <!-- ===== ANIMATIONS ===== -->
+            <Storyboard x:Key="AnimationSelection">
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                               From="0.5" To="1.0"
+                               Duration="0:0:0.3"
+                               AutoReverse="True"
+                               RepeatBehavior="Forever"/>
+            </Storyboard>
+
+            <!-- ===== STYLE SCROLLVIEWER ===== -->
+            <Style TargetType="ScrollViewer">
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            </Style>
+
+            <!-- ===== STYLE LISTBOX (pour l'historique) ===== -->
+            <Style x:Key="ListeHistorique" TargetType="ListBox">
+                <Setter Property="Background" Value="{StaticResource FondPrincipalBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BordureBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Foreground" Value="{StaticResource TextePrincipalBrush}"/>
+                <Setter Property="FontFamily" Value="{StaticResource PoliceMonospace}"/>
+                <Setter Property="FontSize" Value="{StaticResource TaillePolicePetite}"/>
+                <Setter Property="Padding" Value="5"/>
+            </Style>
+
+            <!-- ===== STYLE LABEL ===== -->
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="{StaticResource PolicePrincipale}"/>
+                <Setter Property="FontSize" Value="{StaticResource TaillePoliceNormale}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextePrincipalBrush}"/>
+            </Style>
+
+            <!-- ===== STYLE TEXTBOX ===== -->
+            <Style TargetType="TextBox">
+                <Setter Property="Background" Value="{StaticResource FondPrincipalBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextePrincipalBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BordureBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="8,5"/>
+                <Setter Property="FontFamily" Value="{StaticResource PolicePrincipale}"/>
+                <Setter Property="FontSize" Value="{StaticResource TaillePoliceNormale}"/>
+            </Style>
+
+            <!-- ===== TEMPLATE POUR LES CASES VIDES ===== -->
+            <ControlTemplate x:Key="CaseVideTemplate" TargetType="ContentControl">
+                <Border Background="Transparent"/>
+            </ControlTemplate>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

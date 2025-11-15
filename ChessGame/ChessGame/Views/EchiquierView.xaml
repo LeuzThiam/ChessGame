@@ -1,0 +1,128 @@
+﻿<UserControl x:Class="ChessGame.Views.EchiquierView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:ChessGame.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="640">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Bordure de l'échiquier -->
+        <Border Grid.Row="1" Grid.Column="1"
+                BorderBrush="#1A252F"
+                BorderThickness="3"
+                Background="#34495E">
+
+            <!-- Grille de l'échiquier 8x8 -->
+            <ItemsControl ItemsSource="{Binding Cases}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="8" Columns="8"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <views:CaseView/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <!-- Coordonnées colonnes (haut) -->
+        <ItemsControl Grid.Row="0" Grid.Column="1"
+                      ItemsSource="{Binding CoordonneesColo nnes}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" Columns="8"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               FontFamily="{StaticResource PolicePrincipale}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextePrincipalBrush}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Coordonnées colonnes (bas) -->
+        <ItemsControl Grid.Row="2" Grid.Column="1"
+                      ItemsSource="{Binding CoordonneesColo nnes}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" Columns="8"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               FontFamily="{StaticResource PolicePrincipale}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextePrincipalBrush}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Coordonnées lignes (gauche) -->
+        <ItemsControl Grid.Row="1" Grid.Column="0"
+                      ItemsSource="{Binding CoordonneesLignes}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="8" Columns="1"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               FontFamily="{StaticResource PolicePrincipale}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextePrincipalBrush}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Coordonnées lignes (droite) -->
+        <ItemsControl Grid.Row="1" Grid.Column="2"
+                      ItemsSource="{Binding CoordonneesLignes}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="8" Columns="1"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               FontFamily="{StaticResource PolicePrincipale}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextePrincipalBrush}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

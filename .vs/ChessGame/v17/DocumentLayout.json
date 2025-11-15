@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\modou\\OneDrive\\Documents\\MesProjets\\ChessGame\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7E9B8C01-03AA-4A0E-94EB-3AE6F07462C8}|ChessGame\\ChessGame.csproj|c:\\users\\modou\\onedrive\\documents\\mesprojets\\chessgame\\chessgame\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{7E9B8C01-03AA-4A0E-94EB-3AE6F07462C8}|ChessGame\\ChessGame.csproj|solutionrelative:chessgame\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\modou\\OneDrive\\Documents\\MesProjets\\ChessGame\\ChessGame\\.gitignore",
+              "RelativeDocumentMoniker": "ChessGame\\.gitignore",
+              "ToolTip": "C:\\Users\\modou\\OneDrive\\Documents\\MesProjets\\ChessGame\\ChessGame\\.gitignore",
+              "RelativeToolTip": "ChessGame\\.gitignore",
+              "ViewState": "AgIAAGkAAAAAAAAAAAAswIUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-11-15T04:31:16.864Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
