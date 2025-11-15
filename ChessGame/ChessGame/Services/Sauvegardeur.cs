@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ChessGame.Services
 {
@@ -189,26 +190,33 @@ namespace ChessGame.Services
 
         public string ExporterVersFEN(Echiquier echiquier, EtatPartie etatPartie)
         {
+            if (echiquier == null)
+                throw new ArgumentNullException(nameof(echiquier));
+
             var sb = new StringBuilder();
 
             sb.Append(echiquier.VersNotationFEN());
             sb.Append(" ");
-            sb.Append(etatPartie.JoueurActif?.Couleur == CouleurPiece.Blanc ? "w" : "b");
+            var joueurActif = etatPartie?.JoueurActif?.Couleur == CouleurPiece.Noir ? "b" : "w";
+            sb.Append(joueurActif);
             sb.Append(" ");
 
             string roques = "";
-            if (etatPartie.JoueurBlanc.PeutRoquerPetit) roques += "K";
-            if (etatPartie.JoueurBlanc.PeutRoquerGrand) roques += "Q";
-            if (etatPartie.JoueurNoir.PeutRoquerPetit) roques += "k";
-            if (etatPartie.JoueurNoir.PeutRoquerGrand) roques += "q";
+            var joueurBlanc = etatPartie?.JoueurBlanc;
+            var joueurNoir = etatPartie?.JoueurNoir;
+
+            if (joueurBlanc?.PeutRoquerPetit == true) roques += "K";
+            if (joueurBlanc?.PeutRoquerGrand == true) roques += "Q";
+            if (joueurNoir?.PeutRoquerPetit == true) roques += "k";
+            if (joueurNoir?.PeutRoquerGrand == true) roques += "q";
             sb.Append(roques == "" ? "-" : roques);
             sb.Append(" ");
 
             // En passant
             sb.Append("- ");
-            sb.Append(etatPartie.CompteurDemiCoups);
+            sb.Append(etatPartie?.CompteurDemiCoups ?? 0);
             sb.Append(" ");
-            sb.Append(etatPartie.NumeroCoup);
+            sb.Append(etatPartie?.NumeroCoup ?? 1);
 
             return sb.ToString();
         }
@@ -220,10 +228,14 @@ namespace ChessGame.Services
                 if (!ValiderFEN(fenString))
                     return null;
 
-                string[] sections = fenString.Split(' ');
+                string[] sections = fenString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 string disposition = sections[0];
 
-                Echiquier echiquier = new();
+                Joueur joueurBlanc = new("White", CouleurPiece.Blanc);
+                Joueur joueurNoir = new("Black", CouleurPiece.Noir);
+                EtatPartie etatPartie = new(joueurBlanc, joueurNoir);
+
+                Echiquier echiquier = new(etatPartie);
                 echiquier.Vider();
 
                 string[] rangées = disposition.Split('/');
@@ -248,6 +260,48 @@ namespace ChessGame.Services
                     }
                 }
 
+                if (sections.Length > 1)
+                {
+                    if (sections[1] == "b")
+                    {
+                        etatPartie.JoueurActif = joueurNoir;
+                        joueurBlanc.EstSonTour = false;
+                        joueurNoir.EstSonTour = true;
+                    }
+                    else
+                    {
+                        etatPartie.JoueurActif = joueurBlanc;
+                        joueurBlanc.EstSonTour = true;
+                        joueurNoir.EstSonTour = false;
+                    }
+                }
+
+                if (sections.Length > 2)
+                {
+                    string roques = sections[2];
+
+                    if (roques == "-")
+                    {
+                        joueurBlanc.PeutRoquerPetit = false;
+                        joueurBlanc.PeutRoquerGrand = false;
+                        joueurNoir.PeutRoquerPetit = false;
+                        joueurNoir.PeutRoquerGrand = false;
+                    }
+                    else
+                    {
+                        joueurBlanc.PeutRoquerPetit = roques.Contains('K');
+                        joueurBlanc.PeutRoquerGrand = roques.Contains('Q');
+                        joueurNoir.PeutRoquerPetit = roques.Contains('k');
+                        joueurNoir.PeutRoquerGrand = roques.Contains('q');
+                    }
+                }
+
+                if (sections.Length > 4 && int.TryParse(sections[4], out int compteurDemiCoups))
+                    etatPartie.CompteurDemiCoups = compteurDemiCoups;
+
+                if (sections.Length > 5 && int.TryParse(sections[5], out int numeroCoup))
+                    etatPartie.NumeroCoup = Math.Max(1, numeroCoup);
+
                 return echiquier;
             }
             catch
@@ -265,17 +319,7 @@ namespace ChessGame.Services
         {
             try
             {
-                var data = new
-                {
-                    FEN = ExporterVersFEN(echiquier, etatPartie),
-                    JoueurBlanc = etatPartie.JoueurBlanc.Nom,
-                    JoueurNoir = etatPartie.JoueurNoir.Nom,
-                    Date = etatPartie.DateDebut,
-                    Statut = etatPartie.Statut.ToString(),
-                    Coups = etatPartie.HistoriqueCoups.Select(c => c.NotationAlgebrique).ToList()
-                };
-
-                string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+                string json = ExporterVersJSON(echiquier, etatPartie);
                 File.WriteAllText(cheminFichier, json, Encoding.UTF8);
                 return true;
             }
@@ -283,6 +327,31 @@ namespace ChessGame.Services
             {
                 return false;
             }
+        }
+
+        public string ExporterVersJSON(Echiquier echiquier, EtatPartie etatPartie)
+        {
+            if (echiquier == null)
+                throw new ArgumentNullException(nameof(echiquier));
+
+            EtatPartie etat = etatPartie ?? echiquier?.EtatPartie;
+
+            var data = new PartieJsonData
+            {
+                FEN = ExporterVersFEN(echiquier, etat),
+                JoueurBlanc = etat?.JoueurBlanc?.Nom,
+                JoueurNoir = etat?.JoueurNoir?.Nom,
+                JoueurActif = etat?.JoueurActif?.Couleur.ToString(),
+                Date = etat?.DateDebut,
+                Statut = etat?.Statut.ToString(),
+                TypeFin = etat?.TypeFin.ToString(),
+                Gagnant = etat?.Gagnant?.Couleur.ToString(),
+                NumeroCoup = etat?.NumeroCoup,
+                CompteurDemiCoups = etat?.CompteurDemiCoups,
+                Coups = etat?.HistoriqueCoups?.Select(c => c.NotationAlgebrique).ToList() ?? new List<string>()
+            };
+
+            return JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
         }
 
         public (Echiquier echiquier, EtatPartie etatPartie)? ChargerJSON(string cheminFichier)
@@ -294,8 +363,69 @@ namespace ChessGame.Services
 
                 string json = File.ReadAllText(cheminFichier);
 
-                // ❗ Parser JSON COMPLET à implémenter ici
+                return ImporterDepuisJSON(json);
+            }
+            catch
+            {
                 return null;
+            }
+        }
+
+        public (Echiquier echiquier, EtatPartie etatPartie)? ImporterDepuisJSON(string jsonContent)
+        {
+            try
+            {
+                var data = JsonSerializer.Deserialize<PartieJsonData>(jsonContent);
+                if (data == null)
+                    return null;
+
+                Echiquier echiquier = null;
+                EtatPartie etatPartie = null;
+
+                if (!string.IsNullOrWhiteSpace(data.FEN))
+                {
+                    echiquier = ImporterDepuisFEN(data.FEN);
+                    etatPartie = echiquier?.EtatPartie;
+                }
+
+                if (echiquier == null || etatPartie == null)
+                {
+                    Joueur joueurBlanc = new(data.JoueurBlanc ?? "White", CouleurPiece.Blanc);
+                    Joueur joueurNoir = new(data.JoueurNoir ?? "Black", CouleurPiece.Noir);
+                    etatPartie = new EtatPartie(joueurBlanc, joueurNoir);
+                    echiquier = new Echiquier(etatPartie);
+                }
+
+                if (!string.IsNullOrWhiteSpace(data.JoueurBlanc))
+                    etatPartie.JoueurBlanc.Nom = data.JoueurBlanc;
+                if (!string.IsNullOrWhiteSpace(data.JoueurNoir))
+                    etatPartie.JoueurNoir.Nom = data.JoueurNoir;
+
+                if (data.Date.HasValue)
+                    etatPartie.DateDebut = data.Date.Value;
+
+                if (!string.IsNullOrWhiteSpace(data.Statut) && Enum.TryParse(data.Statut, true, out StatutPartie statut))
+                    etatPartie.Statut = statut;
+
+                if (!string.IsNullOrWhiteSpace(data.TypeFin) && Enum.TryParse(data.TypeFin, true, out TypeFinPartie typeFin))
+                    etatPartie.TypeFin = typeFin;
+
+                if (!string.IsNullOrWhiteSpace(data.Gagnant) && Enum.TryParse(data.Gagnant, true, out CouleurPiece couleurGagnant))
+                    etatPartie.Gagnant = couleurGagnant == CouleurPiece.Blanc ? etatPartie.JoueurBlanc : etatPartie.JoueurNoir;
+
+                if (!string.IsNullOrWhiteSpace(data.JoueurActif) && Enum.TryParse(data.JoueurActif, true, out CouleurPiece couleurActif))
+                    etatPartie.JoueurActif = couleurActif == CouleurPiece.Blanc ? etatPartie.JoueurBlanc : etatPartie.JoueurNoir;
+
+                etatPartie.JoueurBlanc.EstSonTour = etatPartie.JoueurActif == etatPartie.JoueurBlanc;
+                etatPartie.JoueurNoir.EstSonTour = etatPartie.JoueurActif == etatPartie.JoueurNoir;
+
+                if (data.NumeroCoup.HasValue && data.NumeroCoup.Value > 0)
+                    etatPartie.NumeroCoup = data.NumeroCoup.Value;
+
+                if (data.CompteurDemiCoups.HasValue && data.CompteurDemiCoups.Value >= 0)
+                    etatPartie.CompteurDemiCoups = data.CompteurDemiCoups.Value;
+
+                return (echiquier, etatPartie);
             }
             catch
             {
@@ -343,6 +473,31 @@ namespace ChessGame.Services
                     if (headers.TryGetValue("Date", out string d))
                         DateTime.TryParse(d.Replace(".", "/"), out meta.DatePartie);
                 }
+                else if (meta.Format == "JSON")
+                {
+                    string content = File.ReadAllText(cheminFichier, Encoding.UTF8);
+                    try
+                    {
+                        var data = JsonSerializer.Deserialize<PartieJsonData>(content);
+                        if (data != null)
+                        {
+                            meta.JoueurBlanc = data.JoueurBlanc ?? "?";
+                            meta.JoueurNoir = data.JoueurNoir ?? "?";
+                            meta.NombreCoups = data.Coups?.Count ?? 0;
+
+                            if (data.Date.HasValue)
+                                meta.DatePartie = data.Date.Value;
+
+                            meta.Resultat = DeterminerResultatDepuisJson(data) ?? "*";
+                        }
+                    }
+                    catch
+                    {
+                        meta.JoueurBlanc = meta.JoueurBlanc ?? "?";
+                        meta.JoueurNoir = meta.JoueurNoir ?? "?";
+                        meta.Resultat = meta.Resultat ?? "*";
+                    }
+                }
 
                 return meta;
             }
@@ -379,6 +534,47 @@ namespace ChessGame.Services
             }
         }
 
+        public List<MetadonneesPartie> ListerPartiesSauvegardeesAvecFiltres(
+            string cheminDossier,
+            string format = null,
+            DateTime? dateDebut = null,
+            DateTime? dateFin = null)
+        {
+            var parties = ListerPartiesSauvegardees(cheminDossier);
+
+            if (!string.IsNullOrWhiteSpace(format))
+            {
+                string formatUpper = format.ToUpperInvariant();
+                parties = parties
+                    .Where(p => string.Equals(p.Format, formatUpper, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
+            if (dateDebut.HasValue)
+                parties = parties.Where(p => p.DatePartie >= dateDebut.Value).ToList();
+
+            if (dateFin.HasValue)
+                parties = parties.Where(p => p.DatePartie <= dateFin.Value).ToList();
+
+            return parties;
+        }
+
+        public List<MetadonneesPartie> RechercherPartiesParJoueur(string cheminDossier, string nomJoueur)
+        {
+            if (string.IsNullOrWhiteSpace(nomJoueur))
+                return new List<MetadonneesPartie>();
+
+            string terme = nomJoueur.Trim();
+
+            return ListerPartiesSauvegardees(cheminDossier)
+                .Where(meta =>
+                    (!string.IsNullOrEmpty(meta.JoueurBlanc) &&
+                     meta.JoueurBlanc.Contains(terme, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(meta.JoueurNoir) &&
+                     meta.JoueurNoir.Contains(terme, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+        }
+
         // ----------------------------------------------------------------------
         #endregion
         #region ───── VALIDATION ───────────────────────────────────────────────
@@ -410,12 +606,58 @@ namespace ChessGame.Services
             if (string.IsNullOrWhiteSpace(fenString))
                 return false;
 
-            string[] parts = fenString.Split(' ');
-            if (parts.Length < 1)
+            string[] parts = fenString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 4)
                 return false;
 
             string[] rows = parts[0].Split('/');
-            return rows.Length == 8;
+            if (rows.Length != 8)
+                return false;
+
+            foreach (var row in rows)
+            {
+                int count = 0;
+                foreach (char ch in row)
+                {
+                    if (char.IsDigit(ch))
+                    {
+                        int value = ch - '0';
+                        if (value <= 0 || value > 8)
+                            return false;
+
+                        count += value;
+                    }
+                    else if ("prnbqkPRNBQK".IndexOf(ch) >= 0)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (count != 8)
+                    return false;
+            }
+
+            if (parts.Length > 1 && parts[1] != "w" && parts[1] != "b")
+                return false;
+
+            if (parts.Length > 2)
+            {
+                string roques = parts[2];
+                if (roques != "-" && roques.Any(c => !"KQkq".Contains(c)))
+                    return false;
+            }
+
+            if (parts.Length > 4 && (!int.TryParse(parts[4], out int demi) || demi < 0))
+                return false;
+
+            if (parts.Length > 5 && (!int.TryParse(parts[5], out int numero) || numero <= 0))
+                return false;
+
+            return true;
         }
 
         public bool ValiderFichierJSON(string cheminFichier)
@@ -584,6 +826,20 @@ namespace ChessGame.Services
             return "*";
         }
 
+        private string DeterminerResultatDepuisJson(PartieJsonData data)
+        {
+            if (!string.IsNullOrWhiteSpace(data.Gagnant) && Enum.TryParse(data.Gagnant, true, out CouleurPiece gagnant))
+                return gagnant == CouleurPiece.Blanc ? "1-0" : "0-1";
+
+            if (!string.IsNullOrWhiteSpace(data.Statut) && Enum.TryParse(data.Statut, true, out StatutPartie statut))
+            {
+                if (statut is StatutPartie.Nulle or StatutPartie.Pat)
+                    return "1/2-1/2";
+            }
+
+            return null;
+        }
+
         private Piece CreerPieceDepuisSymbole(char symbole, int ligne, int colonne)
         {
             CouleurPiece couleur = char.IsUpper(symbole) ? CouleurPiece.Blanc : CouleurPiece.Noir;
@@ -599,6 +855,21 @@ namespace ChessGame.Services
                 'k' => new Roi(couleur, ligne, colonne),
                 _ => null
             };
+        }
+
+        private class PartieJsonData
+        {
+            public string FEN { get; set; }
+            public string JoueurBlanc { get; set; }
+            public string JoueurNoir { get; set; }
+            public string JoueurActif { get; set; }
+            public DateTime? Date { get; set; }
+            public string Statut { get; set; }
+            public string TypeFin { get; set; }
+            public string Gagnant { get; set; }
+            public int? NumeroCoup { get; set; }
+            public int? CompteurDemiCoups { get; set; }
+            public List<string> Coups { get; set; } = new();
         }
 
         // ----------------------------------------------------------------------
