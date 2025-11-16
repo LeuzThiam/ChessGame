@@ -2,33 +2,25 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- Dossier contenant les images -->
   <ItemGroup>
-    <Folder Include="ChessGame.Tests\Services\" />
-    <Folder Include="ChessGame.Tests\ViewModels\" />
-    <Folder Include="ChessGame\Ressources\Images\" />
+    <Resource Include="Ressources\Images\*.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="ChessGame.Tests.csproj" />
-  </ItemGroup>
+    <!-- Bibliothèques UI uniquement -->
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="6.2.1" />
+    <PackageReference Include="MaterialDesignColors" Version="5.3.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.3.0" />
 
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="8.8.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-    <PackageReference Include="System.Text.Json" Version="10.0.0" />
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <!-- Icônes optionnelles -->
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
+    <PackageReference Include="MaterialDesignThemes.Wpf" Version="1.0.1" />
   </ItemGroup>
 
 </Project>

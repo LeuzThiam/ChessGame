@@ -19,7 +19,8 @@
         Cavalier,
         Fou,
         Reine,
-        Roi
+        Roi,
+        Aucune
     }
 
     /// <summary>

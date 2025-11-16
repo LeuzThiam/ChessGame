@@ -46,6 +46,8 @@ namespace ChessGame.Models
         /// </summary>
         public int NumeroCoup { get; set; }
 
+
+
         /// <summary>
         /// Nombre de demi-coups depuis la dernière capture ou mouvement de pion
         /// (pour la règle des 50 coups)
@@ -109,6 +111,7 @@ namespace ChessGame.Models
             CompteurDemiCoups = 0;
             DateDebut = DateTime.Now;
             TypeFin = TypeFinPartie.Aucune;
+
         }
 
         /// <summary>
@@ -146,7 +149,7 @@ namespace ChessGame.Models
             }
 
             // Changer de joueur
-            ChangerJoueurActif();
+            
 
             // Incrémenter le numéro de coup après le tour des noirs
             if (JoueurActif.Couleur == CouleurPiece.Blanc)
@@ -167,7 +170,7 @@ namespace ChessGame.Models
             HistoriqueCoups.RemoveAt(HistoriqueCoups.Count - 1);
 
             // Revenir au joueur précédent
-            ChangerJoueurActif();
+            
 
             // Décrémenter le numéro de coup si on annule un coup des blancs
             if (JoueurActif.Couleur == CouleurPiece.Blanc)

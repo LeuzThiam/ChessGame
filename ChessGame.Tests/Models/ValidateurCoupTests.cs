@@ -43,7 +43,7 @@ namespace ChessGame.Tests.Services
             echiquier.PlacerPiece(roiBlanc, 7, 4);
             echiquier.PlacerPiece(tourBlanche, 7, 3);
             echiquier.PlacerPiece(reineNoire, 0, 3);
-            echiquier.RoiBlanc = roiBlanc;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);
 
             // La tour protège le roi, la bouger met en échec
             var coup = new Coup(tourBlanche, 7, 3, 7, 2);
@@ -83,7 +83,7 @@ namespace ChessGame.Tests.Services
 
             echiquier.PlacerPiece(roi, 7, 4);
             echiquier.PlacerPiece(tour, 7, 7);
-            echiquier.RoiBlanc = roi;
+            echiquier.PlacerPiece(roi, 4, 4);
 
             var coup = new Coup(roi, 7, 4, 7, 6)
             {
@@ -108,7 +108,7 @@ namespace ChessGame.Tests.Services
 
             echiquier.PlacerPiece(roi, 7, 4);
             echiquier.PlacerPiece(tour, 7, 7);
-            echiquier.RoiBlanc = roi;
+            echiquier.PlacerPiece(roi, 4, 4);
 
             var coup = new Coup(roi, 7, 4, 7, 6)
             {
@@ -134,7 +134,7 @@ namespace ChessGame.Tests.Services
             echiquier.PlacerPiece(roi, 7, 4);
             echiquier.PlacerPiece(tour, 7, 7);
             echiquier.PlacerPiece(reineNoire, 0, 4);
-            echiquier.RoiBlanc = roi;
+            echiquier.PlacerPiece(roi, 4, 4);
 
             var coup = new Coup(roi, 7, 4, 7, 6)
             {
@@ -176,7 +176,7 @@ namespace ChessGame.Tests.Services
             echiquier.PlacerPiece(roiBlanc, 7, 4);
             echiquier.PlacerPiece(pionBlanc, 6, 4);
             echiquier.PlacerPiece(reineNoire, 0, 4);
-            echiquier.RoiBlanc = roiBlanc;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);
 
             var coup = new Coup(pionBlanc, 6, 4, 5, 4);
 

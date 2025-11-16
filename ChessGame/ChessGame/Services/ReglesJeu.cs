@@ -1,6 +1,9 @@
-﻿using ChessGame.Models;
+﻿using System;
+using System.Collections.Generic;
+using ChessGame.Models;
 using ChessGame.Models.Pieces;
 using ChessGame.Services.Interfaces;
+using System.Linq;
 
 namespace ChessGame.Services
 {

@@ -3,126 +3,120 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:views="clr-namespace:ChessGame.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="640" d:DesignWidth="640">
+             mc:Ignorable="d"
+             d:DesignHeight="650" d:DesignWidth="650">
 
     <Grid>
+
+        <!-- =============================== -->
+        <!-- Layout général : 3 lignes, 3 colonnes -->
+        <!-- =============================== -->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Bordure de l'échiquier -->
+        <!-- =============================== -->
+        <!--      COORDONNÉES  COLONNES     -->
+        <!-- =============================== -->
+        <UniformGrid Grid.Row="0" Grid.Column="1" Columns="8">
+            <TextBlock Text="A" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="B" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="C" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="D" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="E" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="F" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="G" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="H" Foreground="White" HorizontalAlignment="Center"/>
+        </UniformGrid>
+
+        <!-- =============================== -->
+        <!--   COORDONNÉES  COLONNES BAS    -->
+        <!-- =============================== -->
+        <UniformGrid Grid.Row="2" Grid.Column="1" Columns="8">
+            <TextBlock Text="A" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="B" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="C" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="D" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="E" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="F" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="G" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="H" Foreground="White" HorizontalAlignment="Center"/>
+        </UniformGrid>
+
+        <!-- =============================== -->
+        <!--      COORDONNÉES LIGNES GAUCHE -->
+        <!-- =============================== -->
+        <UniformGrid Grid.Row="1" Grid.Column="0" Rows="8">
+            <TextBlock Text="8" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="7" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="6" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="5" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="4" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="3" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="2" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="1" Foreground="White" VerticalAlignment="Center"/>
+        </UniformGrid>
+
+        <!-- =============================== -->
+        <!--     COORDONNÉES LIGNES DROITE  -->
+        <!-- =============================== -->
+        <UniformGrid Grid.Row="1" Grid.Column="2" Rows="8">
+            <TextBlock Text="8" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="7" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="6" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="5" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="4" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="3" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="2" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="1" Foreground="White" VerticalAlignment="Center"/>
+        </UniformGrid>
+
+        <!-- =============================== -->
+        <!--          GRILLE ÉCHIQUIER      -->
+        <!-- =============================== -->
         <Border Grid.Row="1" Grid.Column="1"
                 BorderBrush="#1A252F"
                 BorderThickness="3"
+                CornerRadius="4"
                 Background="#34495E">
 
-            <!-- Grille de l'échiquier 8x8 -->
-            <ItemsControl ItemsSource="{Binding Cases}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Rows="8" Columns="8"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+            <Grid x:Name="GrilleEchiquier">
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <views:CaseView/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                <!-- Colonnes de la grille 8x8 -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Lignes de la grille 8x8 -->
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+            </Grid>
+
         </Border>
 
-        <!-- Coordonnées colonnes (haut) -->
-        <ItemsControl Grid.Row="0" Grid.Column="1"
-                      ItemsSource="{Binding CoordonneesColo nnes}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="1" Columns="8"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-        <!-- Coordonnées colonnes (bas) -->
-        <ItemsControl Grid.Row="2" Grid.Column="1"
-                      ItemsSource="{Binding CoordonneesColo nnes}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="1" Columns="8"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-        <!-- Coordonnées lignes (gauche) -->
-        <ItemsControl Grid.Row="1" Grid.Column="0"
-                      ItemsSource="{Binding CoordonneesLignes}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="8" Columns="1"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-        <!-- Coordonnées lignes (droite) -->
-        <ItemsControl Grid.Row="1" Grid.Column="2"
-                      ItemsSource="{Binding CoordonneesLignes}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="8" Columns="1"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}"
-                               FontFamily="{StaticResource PolicePrincipale}"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Foreground="{StaticResource TextePrincipalBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
     </Grid>
 </UserControl>

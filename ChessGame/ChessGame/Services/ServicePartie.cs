@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Threading;
+
 
 namespace ChessGame.Services
 {
@@ -20,6 +22,8 @@ namespace ChessGame.Services
         private readonly GenerateurCoups _generateurCoups;
         private readonly IHistoriqueCoups _historique;
         private readonly ISauvegardeur _sauvegardeur;
+        private DispatcherTimer _timerJeu;
+
 
         // Pile pour le "refaire" (redo)
         private readonly Stack<Coup> _coupsAnnules = new();
@@ -113,6 +117,13 @@ namespace ChessGame.Services
             _debutPartie = DateTime.Now;
             _dureeCumulee = TimeSpan.Zero;
             _debutSegment = _debutPartie;
+
+            // Timer pour gérer le décompte du temps
+            _timerJeu = new DispatcherTimer();
+            _timerJeu.Interval = TimeSpan.FromSeconds(1);
+            _timerJeu.Tick += TimerJeu_Tick;
+            _timerJeu.Start();
+
         }
 
         public void ReinitialiserPartie()
@@ -163,6 +174,8 @@ namespace ChessGame.Services
 
             if (ancienStatut != statut)
                 StatutPartieChange?.Invoke(this, statut);
+
+            _timerJeu?.Stop();
 
             PartieTerminee?.Invoke(this, statut);
         }
@@ -225,20 +238,35 @@ namespace ChessGame.Services
             if (coup == null || EtatPartie == null || Echiquier == null)
                 return false;
 
+            // Interdit de jouer si la partie est terminée
             if (EtatPartie.EstTerminee)
                 return false;
 
+            // Vérification stricte du tour
+            var joueurActif = EtatPartie.JoueurActif;
+
+            if (coup.Piece.Couleur != joueurActif.Couleur)
+                return false;
+
+            if (!joueurActif.EstSonTour)
+                return false;
+
+            // Vérifier légalité du coup
             if (!_validateurCoup.EstCoupLegal(coup, Echiquier))
                 return false;
 
+            // Exécuter le coup
             if (!Echiquier.ExecuterCoup(coup))
                 return false;
 
+            // Ajouter à l'historique
             EtatPartie.AjouterCoup(coup);
 
+            // Sauvegarder la position FEN
             string positionFEN = Echiquier.VersNotationFEN();
             EtatPartie.AjouterPosition(positionFEN);
 
+            // Vérifier si l'adversaire est en échec
             CouleurPiece couleurAdverse = EtatPartie.ObtenirJoueurAdverse().Couleur;
 
             if (_reglesJeu.EstEnEchec(couleurAdverse, Echiquier))
@@ -247,11 +275,10 @@ namespace ChessGame.Services
                 JoueurEnEchec?.Invoke(this, couleurAdverse);
 
                 if (_reglesJeu.EstEchecEtMat(couleurAdverse, Echiquier))
-                {
                     coup.DonneEchecEtMat = true;
-                }
             }
 
+            // Mise à jour du statut de la partie
             var ancienStatut = EtatPartie.Statut;
             StatutPartie nouveauStatut = _reglesJeu.DeterminerStatutPartie(Echiquier, EtatPartie);
             EtatPartie.Statut = nouveauStatut;
@@ -259,14 +286,27 @@ namespace ChessGame.Services
             if (nouveauStatut != ancienStatut)
                 StatutPartieChange?.Invoke(this, nouveauStatut);
 
+            // Si la partie est finie
             if (_reglesJeu.EstPartieTerminee(nouveauStatut))
             {
                 GererFinPartie(nouveauStatut);
+                return true;
             }
 
+            // 🎯 GESTION DES TOURS (IMPORTANT)
+            joueurActif.TerminerTour();
+
+            var joueurSuivant = EtatPartie.ObtenirJoueurAdverse();
+            joueurSuivant.CommencerTour();
+
+            EtatPartie.JoueurActif = joueurSuivant;
+
+            // Notifier
             CoupJoue?.Invoke(this, coup);
+
             return true;
         }
+
 
         public bool JouerCoupNotation(string notation)
         {
@@ -659,6 +699,36 @@ namespace ChessGame.Services
                 }
             }
         }
+
+        private void TimerJeu_Tick(object? sender, EventArgs e)
+        {
+            if (EtatPartie == null)
+                return;
+
+            // Le joueur actif
+            var joueur = EtatPartie.JoueurActif;
+            if (joueur == null)
+                return;
+
+            // On enlève 1 seconde
+            joueur.RetirerTemps(1);
+
+            // Notifier le reste du programme (InfoPartieViewModel)
+            StatutPartieChange?.Invoke(this, EtatPartie.Statut);
+
+            // Si temps écoulé → fin de partie
+            if (joueur.EstTempsEcoule())
+            {
+                _timerJeu.Stop();
+
+                var statut = joueur.Couleur == CouleurPiece.Blanc
+                    ? StatutPartie.EchecEtMatBlanc   // ou StatutPartie.AbandonBlanc selon ton enum
+                    : StatutPartie.EchecEtMatNoir;
+
+                TerminerPartie(statut);
+            }
+        }
+
 
         private void GererFinPartie(StatutPartie statut)
         {

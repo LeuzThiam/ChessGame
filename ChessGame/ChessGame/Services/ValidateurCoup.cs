@@ -210,6 +210,15 @@ namespace ChessGame.Services
                    dernierCoup.ColonneArrivee == coup.ColonneArrivee;
         }
 
+        internal bool EstCoupValide(Coup coupRoque, Echiquier echiquier)
+        {
+            if (coupRoque == null || coupRoque.Piece == null)
+                return false;
+
+            return EstCoupLegal(coupRoque, echiquier);
+        }
+
+
         #endregion
     }
 }

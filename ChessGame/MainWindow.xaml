@@ -1,0 +1,12 @@
+﻿<Window x:Class="ChessGame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ChessGame"
+        Height="720"
+        Width="1100"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E">
+
+    <!-- CONTENEUR DYNAMIQUE -->
+    <Grid x:Name="ContenuPrincipal"/>
+</Window>

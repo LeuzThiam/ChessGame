@@ -1,4 +1,8 @@
-﻿namespace ChessGame.Models.Pieces
+﻿
+using System;
+using System.Collections.Generic;
+
+namespace ChessGame.Models.Pieces
 {
     /// <summary>
     /// Représente un cavalier aux échecs

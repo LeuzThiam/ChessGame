@@ -89,7 +89,8 @@ namespace ChessGame.Tests.Models
 
             echiquier.PlacerPiece(roiBlanc, 4, 4);
             echiquier.PlacerPiece(reineNoire, 4, 7);
-            echiquier.RoiBlanc = roiBlanc;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);
+
 
             // Act
             bool enEchec = echiquier.EstEnEchec(CouleurPiece.Blanc);
@@ -194,7 +195,8 @@ namespace ChessGame.Tests.Models
 
             echiquier.PlacerPiece(roi, 7, 4);
             echiquier.PlacerPiece(tour, 7, 7);
-            echiquier.RoiBlanc = roi;
+            echiquier.PlacerPiece(roi, 4, 4);
+
 
             var coup = new Coup(roi, 7, 4, 7, 6)
             {

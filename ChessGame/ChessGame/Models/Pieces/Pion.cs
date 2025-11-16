@@ -1,4 +1,6 @@
-﻿namespace ChessGame.Models.Pieces
+﻿using System;
+using System.Collections.Generic;
+namespace ChessGame.Models.Pieces
 {
     /// <summary>
     /// Représente un pion aux échecs
@@ -137,6 +139,7 @@
                    dernierCoup.ColonneArrivee == colonneDestination;
         }
 
+
         /// <summary>
         /// Vérifie si le pion peut être promu
         /// </summary>
@@ -145,6 +148,7 @@
             return (Couleur == CouleurPiece.Blanc && Ligne == 0) ||
                    (Couleur == CouleurPiece.Noir && Ligne == 7);
         }
+
 
         #endregion
 

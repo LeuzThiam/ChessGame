@@ -26,7 +26,7 @@ namespace ChessGame.Tests.Services
 
             echiquier.PlacerPiece(roiBlanc, 7, 4);
             echiquier.PlacerPiece(reineNoire, 0, 4);
-            echiquier.RoiBlanc = roiBlanc;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);;
 
             // Act
             bool enEchec = _reglesJeu.EstEnEchec(CouleurPiece.Blanc, echiquier);
@@ -47,7 +47,7 @@ namespace ChessGame.Tests.Services
             echiquier.PlacerPiece(roiBlanc, 7, 4);
             echiquier.PlacerPiece(reineNoire, 6, 5);
             echiquier.PlacerPiece(fouNoir, 4, 2);
-            echiquier.RoiBlanc = roiBlanc;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);;
 
             // Act
             bool estMat = _reglesJeu.EstEchecEtMat(CouleurPiece.Blanc, echiquier);
@@ -69,8 +69,8 @@ namespace ChessGame.Tests.Services
             echiquier.PlacerPiece(roiBlanc, 7, 0);
             echiquier.PlacerPiece(reineNoire, 5, 1);
             echiquier.PlacerPiece(roiNoir, 5, 2);
-            echiquier.RoiBlanc = roiBlanc;
-            echiquier.RoiNoir = roiNoir;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);
 
             // Act
             bool estPat = _reglesJeu.EstPat(CouleurPiece.Blanc, echiquier);
@@ -90,8 +90,8 @@ namespace ChessGame.Tests.Services
 
             echiquier.PlacerPiece(roiBlanc, 7, 4);
             echiquier.PlacerPiece(roiNoir, 0, 4);
-            echiquier.RoiBlanc = roiBlanc;
-            echiquier.RoiNoir = roiNoir;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);
 
             // Act
             bool insuffisant = _reglesJeu.EstMaterielInsuffisant(echiquier);
@@ -112,8 +112,8 @@ namespace ChessGame.Tests.Services
             echiquier.PlacerPiece(roiBlanc, 7, 4);
             echiquier.PlacerPiece(cavalierBlanc, 6, 3);
             echiquier.PlacerPiece(roiNoir, 0, 4);
-            echiquier.RoiBlanc = roiBlanc;
-            echiquier.RoiNoir = roiNoir;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);
 
             // Act
             bool insuffisant = _reglesJeu.EstMaterielInsuffisant(echiquier);
@@ -134,8 +134,8 @@ namespace ChessGame.Tests.Services
             echiquier.PlacerPiece(roiBlanc, 7, 4);
             echiquier.PlacerPiece(pionBlanc, 6, 4);
             echiquier.PlacerPiece(roiNoir, 0, 4);
-            echiquier.RoiBlanc = roiBlanc;
-            echiquier.RoiNoir = roiNoir;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);;
+            echiquier.PlacerPiece(roiBlanc, 4, 4);
 
             // Act
             bool insuffisant = _reglesJeu.EstMaterielInsuffisant(echiquier);

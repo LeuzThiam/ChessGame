@@ -4,7 +4,6 @@ using ChessGame.ViewModels.Base;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,6 +15,7 @@ namespace ChessGame.ViewModels
     public class InfoPartieViewModel : ViewModelBase
     {
         private readonly IServicePartie _servicePartie;
+
         private string _nomJoueurBlanc;
         private string _nomJoueurNoir;
         private string _tempsJoueurBlanc;
@@ -80,7 +80,7 @@ namespace ChessGame.ViewModels
         }
 
         /// <summary>
-        /// Historique des coups
+        /// Historique des coups formaté (1. e4 e5, 2. Cf3 Cc6...)
         /// </summary>
         public ObservableCollection<string> HistoriqueCoups { get; }
 
@@ -101,7 +101,7 @@ namespace ChessGame.ViewModels
 
         public InfoPartieViewModel(IServicePartie servicePartie)
         {
-            _servicePartie = servicePartie;
+            _servicePartie = servicePartie ?? throw new ArgumentNullException(nameof(servicePartie));
 
             HistoriqueCoups = new ObservableCollection<string>();
 
@@ -110,14 +110,17 @@ namespace ChessGame.ViewModels
             CommandeAnnulerCoup = new RelayCommand(_ => AnnulerCoup(), _ => PeutAnnulerCoup());
             CommandeProposerNulle = new RelayCommand(_ => ProposerNulle(), _ => PartieEnCours());
             CommandeAbandonner = new RelayCommand(_ => Abandonner(), _ => PartieEnCours());
-            CommandeSauvegarder = new RelayCommand(_ => Sauvegarder());
+            CommandeSauvegarder = new RelayCommand(_ => Sauvegarder(), _ => PartieEnCours());
             CommandeCharger = new RelayCommand(_ => Charger());
 
-            // S'abonner aux événements du service
+            // S'abonner aux événements du service pour rester synchro
             _servicePartie.CoupJoue += (s, e) => ActualiserInfos();
             _servicePartie.CoupAnnule += (s, e) => ActualiserInfos();
             _servicePartie.PartieTerminee += (s, e) => ActualiserInfos();
             _servicePartie.StatutPartieChange += (s, e) => ActualiserInfos();
+
+            // Si une partie est déjà en cours dans le service
+            ActualiserInfos();
         }
 
         #endregion
@@ -129,24 +132,26 @@ namespace ChessGame.ViewModels
         /// </summary>
         public void ActualiserInfos()
         {
-            if (_servicePartie.EtatPartie == null)
+            var etat = _servicePartie.EtatPartie;
+            if (etat == null)
                 return;
 
             // Noms des joueurs
-            NomJoueurBlanc = _servicePartie.EtatPartie.JoueurBlanc?.Nom ?? "Joueur Blanc";
-            NomJoueurNoir = _servicePartie.EtatPartie.JoueurNoir?.Nom ?? "Joueur Noir";
+            NomJoueurBlanc = etat.JoueurBlanc?.Nom ?? "Joueur Blanc";
+            NomJoueurNoir = etat.JoueurNoir?.Nom ?? "Joueur Noir";
 
-            // Temps
-            TempsJoueurBlanc = FormateurTemps(_servicePartie.EtatPartie.JoueurBlanc?.TempsRestant ?? TimeSpan.Zero);
-            TempsJoueurNoir = FormateurTemps(_servicePartie.EtatPartie.JoueurNoir?.TempsRestant ?? TimeSpan.Zero);
+            // Temps (si tu veux gérer les horloges plus tard, c'est déjà prêt)
+            TempsJoueurBlanc = FormaterTemps(etat.JoueurBlanc?.TempsRestant ?? TimeSpan.Zero);
+            TempsJoueurNoir = FormaterTemps(etat.JoueurNoir?.TempsRestant ?? TimeSpan.Zero);
 
             // Statut
-            StatutPartie = ObtenirTexteStatut(_servicePartie.ObtenirStatutPartie());
+            var statut = _servicePartie.ObtenirStatutPartie();
+            StatutPartie = ObtenirTexteStatut(statut);
 
             // Tour actuel
             var joueurActif = _servicePartie.ObtenirJoueurActif();
             TourActuel = joueurActif != null
-                ? $"Tour: {joueurActif.Nom} ({joueurActif.Couleur})"
+                ? $"Tour : {joueurActif.Nom} ({joueurActif.Couleur})"
                 : "Partie terminée";
 
             // Historique
@@ -154,7 +159,7 @@ namespace ChessGame.ViewModels
         }
 
         /// <summary>
-        /// Actualise l'historique des coups
+        /// Actualise l'historique des coups (en lignes style PGN)
         /// </summary>
         private void ActualiserHistorique()
         {
@@ -166,16 +171,16 @@ namespace ChessGame.ViewModels
 
             for (int i = 0; i < coups.Count; i++)
             {
-                // Ajouter le numéro de coup pour les blancs
                 if (i % 2 == 0)
                 {
+                    // Coup des blancs
                     string ligne = $"{(i / 2) + 1}. {coups[i].NotationAlgebrique}";
 
-                    // Ajouter le coup des noirs sur la même ligne si disponible
+                    // Coup des noirs sur la même ligne si présent
                     if (i + 1 < coups.Count)
                     {
-                        ligne += $"  {coups[i + 1].NotationAlgebrique}";
-                        i++; // Sauter le coup suivant
+                        ligne += $"   {coups[i + 1].NotationAlgebrique}";
+                        i++; // on saute le coup des noirs déjà utilisé
                     }
 
                     HistoriqueCoups.Add(ligne);
@@ -185,7 +190,7 @@ namespace ChessGame.ViewModels
 
         #endregion
 
-        #region Actions
+        #region Actions (Commandes)
 
         /// <summary>
         /// Démarre une nouvelle partie
@@ -200,7 +205,6 @@ namespace ChessGame.ViewModels
 
             if (resultat == MessageBoxResult.Yes)
             {
-                // Demander les noms des joueurs (simplifié)
                 _servicePartie.DemarrerNouvellePartie("Joueur Blanc", "Joueur Noir", 10);
                 ActualiserInfos();
             }
@@ -211,8 +215,7 @@ namespace ChessGame.ViewModels
         /// </summary>
         private void AnnulerCoup()
         {
-            bool succes = _servicePartie.AnnulerCoup();
-            if (succes)
+            if (_servicePartie.AnnulerCoup())
             {
                 ActualiserInfos();
             }
@@ -225,7 +228,7 @@ namespace ChessGame.ViewModels
         {
             var resultat = MessageBox.Show(
                 "Proposer une partie nulle ?",
-                "Partie Nulle",
+                "Proposition de nulle",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 
@@ -233,10 +236,10 @@ namespace ChessGame.ViewModels
             {
                 _servicePartie.ProposerNulle();
 
-                // Simuler l'acceptation (à améliorer avec un système de confirmation)
+                // Ici on simule la réponse de l'adversaire
                 var acceptation = MessageBox.Show(
                     "L'adversaire accepte-t-il la nulle ?",
-                    "Acceptation",
+                    "Réponse à la proposition",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
 
@@ -254,11 +257,13 @@ namespace ChessGame.ViewModels
         }
 
         /// <summary>
-        /// Abandonne la partie
+        /// Abandonner la partie
         /// </summary>
         private void Abandonner()
         {
             var joueurActif = _servicePartie.ObtenirJoueurActif();
+            if (joueurActif == null)
+                return;
 
             var resultat = MessageBox.Show(
                 $"{joueurActif.Nom} abandonne la partie ?",
@@ -274,7 +279,7 @@ namespace ChessGame.ViewModels
         }
 
         /// <summary>
-        /// Sauvegarde la partie
+        /// Sauvegarder la partie au format PGN
         /// </summary>
         private void Sauvegarder()
         {
@@ -290,20 +295,16 @@ namespace ChessGame.ViewModels
                 bool succes = _servicePartie.SauvegarderPartie(dialog.FileName);
 
                 if (succes)
-                {
                     MessageBox.Show("Partie sauvegardée avec succès !", "Sauvegarde",
                         MessageBoxButton.OK, MessageBoxImage.Information);
-                }
                 else
-                {
                     MessageBox.Show("Erreur lors de la sauvegarde.", "Erreur",
                         MessageBoxButton.OK, MessageBoxImage.Error);
-                }
             }
         }
 
         /// <summary>
-        /// Charge une partie
+        /// Charger une partie depuis un fichier PGN
         /// </summary>
         private void Charger()
         {
@@ -337,7 +338,8 @@ namespace ChessGame.ViewModels
 
         private bool PeutAnnulerCoup()
         {
-            return _servicePartie.ObtenirHistorique()?.Count > 0;
+            var liste = _servicePartie.ObtenirHistorique();
+            return liste != null && liste.Count > 0 && !_servicePartie.EstPartieTerminee();
         }
 
         private bool PartieEnCours()
@@ -350,9 +352,9 @@ namespace ChessGame.ViewModels
         #region Utilitaires
 
         /// <summary>
-        /// Formate un temps en chaîne lisible
+        /// Formate un TimeSpan en "mm:ss" ou "hh:mm:ss"
         /// </summary>
-        private string FormateurTemps(TimeSpan temps)
+        private string FormaterTemps(TimeSpan temps)
         {
             if (temps.TotalHours >= 1)
                 return temps.ToString(@"hh\:mm\:ss");
@@ -361,21 +363,21 @@ namespace ChessGame.ViewModels
         }
 
         /// <summary>
-        /// Obtient le texte du statut
+        /// Texte lisible pour le statut de partie
         /// </summary>
         private string ObtenirTexteStatut(StatutPartie statut)
         {
             return statut switch
             {
-                StatutPartie.EnCours => "Partie en cours",
-                StatutPartie.EchecBlanc => "Échec aux blancs !",
-                StatutPartie.EchecNoir => "Échec aux noirs !",
-                StatutPartie.EchecEtMatBlanc => "Échec et mat ! Les noirs gagnent !",
-                StatutPartie.EchecEtMatNoir => "Échec et mat ! Les blancs gagnent !",
-                StatutPartie.Pat => "Pat ! Partie nulle",
-                StatutPartie.Nulle => "Partie nulle",
-                StatutPartie.AbandonBlanc => "Les blancs abandonnent",
-                StatutPartie.AbandonNoir => "Les noirs abandonnent",
+                Models.StatutPartie.EnCours => "Partie en cours",
+                Models.StatutPartie.EchecBlanc => "Échec au roi blanc",
+                Models.StatutPartie.EchecNoir => "Échec au roi noir",
+                Models.StatutPartie.EchecEtMatBlanc => "Échec et mat ! Les noirs gagnent",
+                Models.StatutPartie.EchecEtMatNoir => "Échec et mat ! Les blancs gagnent",
+                Models.StatutPartie.Pat => "Pat – partie nulle",
+                Models.StatutPartie.Nulle => "Partie nulle",
+                Models.StatutPartie.AbandonBlanc => "Les blancs abandonnent",
+                Models.StatutPartie.AbandonNoir => "Les noirs abandonnent",
                 _ => "Statut inconnu"
             };
         }

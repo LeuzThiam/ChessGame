@@ -166,6 +166,8 @@ namespace ChessGame.Models
             Cases[ligne, colonne].PlacerPiece(piece);
             piece.Ligne = ligne;
             piece.Colonne = colonne;
+            piece.ADejaBougee = false; // IMPORTANT
+
         }
 
         /// <summary>
@@ -225,33 +227,45 @@ namespace ChessGame.Models
             if (piece == null)
                 return false;
 
-            // Gérer les coups spéciaux
+            // -------------------------
+            // 1) GESTION DES COUPS SPÉCIAUX
+            // -------------------------
             if (coup.EstPetitRoque || coup.EstGrandRoque)
-            {
                 return ExecuterRoque(coup);
-            }
 
             if (coup.EstEnPassant)
-            {
                 return ExecuterEnPassant(coup);
-            }
 
-            // Mouvement normal
+            // -------------------------
+            // 2) MOUVEMENT NORMAL
+            // -------------------------
             Cases[coup.LigneDepart, coup.ColonneDepart].RetirerPiece();
             Cases[coup.LigneArrivee, coup.ColonneArrivee].PlacerPiece(piece);
 
+            // Mise à jour des coordonnées
             piece.Ligne = coup.LigneArrivee;
             piece.Colonne = coup.ColonneArrivee;
+
+            // La pièce a maintenant bougé
             piece.ADejaBougee = true;
 
-            // Promotion du pion
+            // -------------------------
+            // 3) PROMOTION
+            // -------------------------
             if (coup.EstPromotion)
-            {
                 ExecuterPromotion(coup);
-            }
+
+            // -------------------------
+            // 4) NOTE IMPORTANTE !
+            // Ici on NE MET PAS dernier coup.
+            // DernierCoup se met automatiquement 
+            // quand ServicePartie -> EtatPartie.AjouterCoup(coup)
+            // -------------------------
 
             return true;
         }
+
+
 
         /// <summary>
         /// Exécute le roque
@@ -346,6 +360,18 @@ namespace ChessGame.Models
             nouvellePiece.ADejaBougee = true;
             Cases[coup.LigneArrivee, coup.ColonneArrivee].PlacerPiece(nouvellePiece);
         }
+
+        public void Vider()
+        {
+            for (int lig = 0; lig < 8; lig++)
+            {
+                for (int col = 0; col < 8; col++)
+                {
+                    Cases[lig, col].Piece = null;
+                }
+            }
+        }
+
 
         #endregion
 
