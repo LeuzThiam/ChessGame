@@ -1,0 +1,33 @@
+# Normalize text files by default
+* text=auto
+
+# Source files
+*.cs text diff=csharp
+*.csproj text
+*.sln text eol=crlf
+*.xaml text
+*.xml text
+*.json text
+
+# Docs and workflows should stay LF for GitHub/Linux tooling
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.pfx binary
+*.snk binary
