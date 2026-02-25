@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="ChessGameMAUI.Views.ChoixJoueursView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#1A0F0A">
+
+    <Grid x:Name="MainGrid"
+          Padding="20"
+          RowDefinitions="Auto,*,Auto"
+          HorizontalOptions="Fill"
+          VerticalOptions="Fill">
+
+        <VerticalStackLayout x:Name="ContentStack"
+                             Grid.Row="1"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="20"
+                             Padding="15"
+                             WidthRequest="350">
+
+            <!-- TITRE -->
+            <VerticalStackLayout x:Name="TitreStack"
+                                 Spacing="6"
+                                 HorizontalOptions="Center"
+                                 Margin="0,10,0,20">
+                <Label x:Name="IconeTitre"
+                       Text="⚔️"
+                       FontSize="40"
+                       HorizontalOptions="Center"
+                       TextColor="#D4AF37"
+                       Margin="0,0,0,-8">
+                    <Label.Shadow>
+                        <Shadow Brush="#000000"
+                                Radius="12"
+                                Opacity="0.4"
+                                Offset="2,2"/>
+                    </Label.Shadow>
+                </Label>
+                <Label x:Name="TitreLabel"
+                       Text="NOUVELLE PARTIE"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="#D4AF37"
+                       HorizontalOptions="Center">
+                    <Label.Shadow>
+                        <Shadow Brush="#000000"
+                                Radius="10"
+                                Opacity="0.4"
+                                Offset="2,2"/>
+                    </Label.Shadow>
+                </Label>
+                <Label x:Name="SousTitreLabel"
+                       Text="Configurez les joueurs"
+                       FontSize="13"
+                       TextColor="#B0B0B0"
+                       HorizontalOptions="Center"
+                       Margin="0,3,0,0"
+                       Opacity="0.8"/>
+            </VerticalStackLayout>
+
+            <!-- JOUEUR BLANC -->
+            <VerticalStackLayout Spacing="8">
+                <Label x:Name="LabelJoueurBlanc"
+                       Text="♔ Joueur Blanc"
+                       FontSize="13"
+                       TextColor="#D4AF37"
+                       FontAttributes="Bold"
+                       Margin="5,0,0,3"/>
+
+                <Border x:Name="BorderJoueurBlanc"
+                        BackgroundColor="#252538"
+                        Stroke="#D4AF37"
+                        StrokeThickness="2"
+                        Padding="12,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000"
+                                Radius="12"
+                                Opacity="0.3"
+                                Offset="0,3"/>
+                    </Border.Shadow>
+
+                    <Entry x:Name="TxtBlanc"
+                           Placeholder="Nom du joueur blanc"
+                           PlaceholderColor="#888"
+                           BackgroundColor="Transparent"
+                           TextColor="#FFFFFF"
+                           FontSize="15"
+                           HeightRequest="45"
+                           Margin="0"/>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- JOUEUR NOIR -->
+            <VerticalStackLayout Spacing="6">
+                <Label x:Name="LabelJoueurNoir"
+                       Text="♚ Joueur Noir"
+                       FontSize="13"
+                       TextColor="#FFFFFF"
+                       FontAttributes="Bold"
+                       Margin="5,0,0,3"/>
+
+                <Border x:Name="BorderJoueurNoir"
+                        BackgroundColor="#252538"
+                        Stroke="#666"
+                        StrokeThickness="2"
+                        Padding="12,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000"
+                                Radius="12"
+                                Opacity="0.3"
+                                Offset="0,3"/>
+                    </Border.Shadow>
+
+                    <Entry x:Name="TxtNoir"
+                           Placeholder="Nom du joueur noir"
+                           PlaceholderColor="#888"
+                           BackgroundColor="Transparent"
+                           TextColor="#FFFFFF"
+                           FontSize="15"
+                           HeightRequest="45"
+                           Margin="0"/>
+                </Border>
+
+                <!-- Option IA -->
+                <Grid ColumnDefinitions="Auto,*" Margin="4,4,0,0" VerticalOptions="Center">
+                    <CheckBox x:Name="ChkVsIa"
+                              VerticalOptions="Center"
+                              CheckedChanged="ChkVsIa_CheckedChanged"/>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="Jouer contre l'ordinateur"
+                               FontSize="13"
+                               TextColor="#f5e3c8"/>
+                        <HorizontalStackLayout Spacing="10"
+                                               VerticalOptions="Center">
+                            <Label Text="Niveau"
+                                   FontSize="12"
+                                   TextColor="#bfc4d2"/>
+                            <Slider x:Name="SliderNiveau"
+                                    Minimum="1"
+                                    Maximum="6"
+                                    Value="2"
+                                    ValueChanged="SliderNiveau_ValueChanged"
+                                    WidthRequest="140"/>
+                            <Label x:Name="LblNiveau"
+                                   Text="2"
+                                   FontSize="12"
+                                   TextColor="#f5e3c8"
+                                   WidthRequest="24"
+                                   HorizontalTextAlignment="Center"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- BOUTONS -->
+            <VerticalStackLayout x:Name="BoutonsStack"
+                                 Spacing="12" 
+                                 Margin="0,15,0,0">
+
+                <!-- DÉMARRER -->
+                <Button x:Name="BtnDemarrer"
+                        Text="▶ Démarrer la partie"
+                        Clicked="BtnDemarrer_Click"
+                        BackgroundColor="#D2B48C"
+                        TextColor="#3A2A1A"
+                        HeightRequest="50"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        Margin="0,0,0,3">
+                    <Button.Shadow>
+                        <Shadow Brush="#000000"
+                                Radius="15"
+                                Opacity="0.4"
+                                Offset="0,4"/>
+                    </Button.Shadow>
+                </Button>
+
+                <!-- RETOUR -->
+                <Button x:Name="BtnRetour"
+                        Text="← Retour au menu"
+                        Clicked="BtnRetour_Click"
+                        BackgroundColor="#3A3A4E"
+                        TextColor="#E0E0E0"
+                        HeightRequest="45"
+                        FontSize="14"
+                        CornerRadius="9"/>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentView>

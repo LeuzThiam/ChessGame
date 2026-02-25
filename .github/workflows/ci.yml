@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - "feature/**"
+      - "fix/**"
+      - "hotfix/**"
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore solution (without MAUI)
+        run: |
+          dotnet restore ChessGame.SharedKernel/ChessGame.SharedKernel.csproj
+          dotnet restore ChessGame.Core/ChessGame.Core.csproj
+          dotnet restore ChessGame.Infrastructure/ChessGame.Infrastructure.csproj
+          dotnet restore ChessGame.TestsUnitaires/ChessGame.TestsUnitaires.csproj
+          dotnet restore ChessGame.TestsIntegration/ChessGame.TestsIntegration.csproj
+
+      - name: Build libraries and tests
+        run: |
+          dotnet build ChessGame.SharedKernel/ChessGame.SharedKernel.csproj --configuration Release --no-restore
+          dotnet build ChessGame.Core/ChessGame.Core.csproj --configuration Release --no-restore
+          dotnet build ChessGame.Infrastructure/ChessGame.Infrastructure.csproj --configuration Release --no-restore
+          dotnet build ChessGame.TestsUnitaires/ChessGame.TestsUnitaires.csproj --configuration Release --no-restore
+          dotnet build ChessGame.TestsIntegration/ChessGame.TestsIntegration.csproj --configuration Release --no-restore
+
+      - name: Run unit tests
+        run: dotnet test ChessGame.TestsUnitaires/ChessGame.TestsUnitaires.csproj --configuration Release --no-build --verbosity normal
+
+      - name: Run integration tests
+        run: dotnet test ChessGame.TestsIntegration/ChessGame.TestsIntegration.csproj --configuration Release --no-build --verbosity normal
+

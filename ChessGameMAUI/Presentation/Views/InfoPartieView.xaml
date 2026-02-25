@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="ChessGameMAUI.Views.InfoPartieView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <ScrollView>
+        <Border BackgroundColor="#0f1118"
+                Stroke="#243042"
+                StrokeThickness="1.5"
+                Padding="18"
+                Margin="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16"/>
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="16">
+
+                <Label Text="Infos de la partie"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="#f5f5f5"
+                       HorizontalOptions="Center"/>
+
+                <!-- Timers + tour -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <Border x:Name="JoueurBlancCard"
+                            BackgroundColor="#182033"
+                            Padding="12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Blancs" FontSize="12" TextColor="#bfc4d2"/>
+                            <Label Text="{Binding NomJoueurBlanc}" FontSize="16" TextColor="#f5f5f5" FontAttributes="Bold"/>
+                            <Label Text="{Binding TempsJoueurBlanc}" FontSize="24" TextColor="#27ae60" FontFamily="Courier" FontAttributes="Bold"/>
+                            <Label x:Name="LblTraitBlanc" Text="Trait aux blancs" TextColor="#27ae60" FontSize="12" IsVisible="False"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="JoueurNoirCard"
+                            BackgroundColor="#182033"
+                            Padding="12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Noirs" FontSize="12" TextColor="#bfc4d2"/>
+                            <Label Text="{Binding NomJoueurNoir}" FontSize="16" TextColor="#f5f5f5" FontAttributes="Bold"/>
+                            <Label Text="{Binding TempsJoueurNoir}" FontSize="24" TextColor="#e67e22" FontFamily="Courier" FontAttributes="Bold"/>
+                            <Label x:Name="LblTraitNoir" Text="Trait aux noirs" TextColor="#e67e22" FontSize="12" IsVisible="False"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Statut -->
+                <Border BackgroundColor="#182033" Padding="12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="État de la partie" FontSize="12" TextColor="#bfc4d2"/>
+                        <Label Text="{Binding StatutPartie}" FontSize="14" TextColor="#f5f5f5" FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Pièce sélectionnée -->
+                <Border x:Name="PieceInfoPanel"
+                        BackgroundColor="#1c2739"
+                        Padding="12"
+                        IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Pièce sélectionnée" FontSize="12" TextColor="#bfc4d2"/>
+                        <Label x:Name="PieceNomLabel" Text="-" FontSize="15" FontAttributes="Bold" TextColor="#f5f5f5"/>
+                        <Label x:Name="PieceDetailsLabel" Text="" FontSize="12" TextColor="#c8cedd"/>
+                        <Label x:Name="CoupsPossiblesLabel" Text="" FontSize="12" FontAttributes="Bold" TextColor="#4CAF50"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Captures -->
+                <Border BackgroundColor="#182033" Padding="12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Pièces capturées" FontSize="12" TextColor="#bfc4d2"/>
+                        <Label Text="{Binding CapturesParNoirs}" FontSize="13" TextColor="#f5f5f5"/>
+                        <Label Text="{Binding CapturesParBlancs}" FontSize="13" TextColor="#f5f5f5"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Historique -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Historique des coups" FontSize="15" FontAttributes="Bold" TextColor="#f5f5f5"/>
+                    <Border BackgroundColor="#182033" HeightRequest="200">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <ScrollView>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding HistoriqueCoups}"
+                                                 Spacing="6"
+                                                 Padding="10">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Text="{Binding}"
+                                               TextColor="#e0e0e0"
+                                               FontSize="13"
+                                               FontFamily="Courier"/>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </ScrollView>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Actions -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Contrôles" FontSize="15" FontAttributes="Bold" TextColor="#f5f5f5"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <Button Text="Annuler coup"
+                                Command="{Binding CommandeAnnulerCoup}"
+                                BackgroundColor="#243042"
+                                TextColor="#f5f5f5"
+                                CornerRadius="10"/>
+                        <Button Text="Recommencer"
+                                Command="{Binding CommandeNouvellePartie}"
+                                BackgroundColor="#243042"
+                                TextColor="#f5f5f5"
+                                CornerRadius="10"
+                                Grid.Column="1"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <Button Text="Abandonner"
+                                Command="{Binding CommandeAbandonner}"
+                                BackgroundColor="#8b2f2f"
+                                TextColor="White"
+                                CornerRadius="10"/>
+                        <Button Text="Analyser"
+                                Command="{Binding CommandeSauvegarder}"
+                                BackgroundColor="#27ae60"
+                                TextColor="White"
+                                CornerRadius="10"
+                                Grid.Column="1"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                        <Button Text="Pause"
+                                BackgroundColor="#243042"
+                                TextColor="#f5f5f5"
+                                CornerRadius="10"
+                                Clicked="BtnPause_Click"/>
+                        <Button Text="Nulle"
+                                Command="{Binding CommandeProposerNulle}"
+                                BackgroundColor="#243042"
+                                TextColor="#f5f5f5"
+                                CornerRadius="10"
+                                Grid.Column="1"/>
+                    </Grid>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </Border>
+    </ScrollView>
+
+</ContentView>

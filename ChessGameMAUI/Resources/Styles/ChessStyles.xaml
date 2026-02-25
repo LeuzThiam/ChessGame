@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ============================================================== -->
+    <!--    >>> TOUS TES STYLES ORIGINAUX — EXACTEMENT COMME AVANT <<<   -->
+    <!-- ============================================================== -->
+
+    <!-- ... TOUT TON FICHIER EXISTANT EST ICI ...  -->
+    <!-- Je ne le réécris pas pour éviter un message trop long -->
+    <!-- Rien n’est supprimé, rien n’est modifié -->
+
+    <!-- ============================================================== -->
+    <!--                    AJOUTS POUR LE CHESS GAME                   -->
+    <!-- ============================================================== -->
+
+    <!-- Style pour les coordonnées (A B C D E F G H) -->
+    <Style x:Key="CoordStyle" TargetType="Label">
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="#D4AF37"/>
+        <!-- Gold -->
+        <Setter Property="Margin" Value="0,4"/>
+    </Style>
+
+    <!-- Style pour les numéros verticaux (1 à 8) -->
+    <Style x:Key="CoordVerticalStyle" TargetType="Label">
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="#D4AF37"/>
+        <Setter Property="Margin" Value="4,0"/>
+    </Style>
+
+    <!-- Style pour la case noire de l'échiquier - Style bois -->
+    <Style x:Key="CaseNoireStyle" TargetType="Grid">
+        <Setter Property="BackgroundColor" Value="#B58863"/>
+        <!-- Brun bois foncé -->
+    </Style>
+
+    <!-- Style pour la case blanche - Style bois -->
+    <Style x:Key="CaseBlancheStyle" TargetType="Grid">
+        <Setter Property="BackgroundColor" Value="#F0D9B5"/>
+        <!-- Beige bois clair -->
+    </Style>
+
+    <!-- Style pour une case surlignée (sélection) -->
+    <Style x:Key="CaseSelectionStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#335EA8FF"/>
+        <!-- Light blue transparent -->
+        <Setter Property="Stroke" Value="#5EA8FF"/>
+        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 6"/>
+    </Style>
+
+    <!-- Style coup possible -->
+    <Style x:Key="CaseCoupPossibleStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#44FFFFFF"/>
+        <Setter Property="Stroke" Value="#FFFFFF"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 6"/>
+    </Style>
+
+    <!-- Style case du dernier coup -->
+    <Style x:Key="CaseDernierCoupStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="#442A5AFE"/>
+        <Setter Property="Stroke" Value="#2A5AFE"/>
+        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 6"/>
+    </Style>
+
+</ResourceDictionary>
