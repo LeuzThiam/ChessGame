@@ -57,7 +57,7 @@ namespace ChessGame.Core.Domain.Models.Pieces
                     // En passant
                     if (PeutCapturerEnPassant(nouvelleLigne, col, echiquier))
                     {
-                        Piece pionCapture = echiquier.ObtenirPiece(Ligne, col);
+                        Piece? pionCapture = echiquier.ObtenirPiece(Ligne, col);
                         Coup coupEnPassant = new Coup(this, Ligne, Colonne, nouvelleLigne, col, pionCapture)
                         {
                             EstEnPassant = true
@@ -124,13 +124,13 @@ namespace ChessGame.Core.Domain.Models.Pieces
                 return false;
 
             // Vérifier qu'il y a un pion adverse à côté
-            Piece pionAdjacent = echiquier.ObtenirPiece(Ligne, colonneDestination);
+            Piece? pionAdjacent = echiquier.ObtenirPiece(Ligne, colonneDestination);
             if (pionAdjacent == null || pionAdjacent.Type != TypePiece.Pion ||
                 pionAdjacent.Couleur == Couleur)
                 return false;
 
             // Vérifier que le dernier coup était un mouvement de deux cases de ce pion
-            Coup dernierCoup = echiquier.EtatPartie?.DernierCoup;
+            Coup? dernierCoup = echiquier.EtatPartie?.DernierCoup;
             if (dernierCoup == null)
                 return false;
 

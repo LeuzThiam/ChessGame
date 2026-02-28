@@ -88,8 +88,10 @@ namespace ChessGame.Core.Application.Services
             // Roi + Fou contre Roi + Fou (même couleur de case)
             if (EstSeulementRoiEtFou(piecesBlanches) && EstSeulementRoiEtFou(piecesNoires))
             {
-                Fou fouBlanc = piecesBlanches.First(p => p.Type == TypePiece.Fou) as Fou;
-                Fou fouNoir = piecesNoires.First(p => p.Type == TypePiece.Fou) as Fou;
+                Fou? fouBlanc = piecesBlanches.OfType<Fou>().FirstOrDefault();
+                Fou? fouNoir = piecesNoires.OfType<Fou>().FirstOrDefault();
+                if (fouBlanc == null || fouNoir == null)
+                    return false;
 
                 // Les fous sont sur des cases de même couleur
                 bool fouBlancSurCaseClaire = (fouBlanc.Ligne + fouBlanc.Colonne) % 2 == 0;

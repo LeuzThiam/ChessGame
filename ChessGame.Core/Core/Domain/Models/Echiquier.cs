@@ -348,6 +348,9 @@ namespace ChessGame.Core.Domain.Models
         /// </summary>
         private void ExecuterPromotion(Coup coup)
         {
+            if (coup.Piece == null)
+                return;
+
             Piece nouvellePiece = coup.PiecePromotion switch
             {
                 TypePiece.Reine => new Reine(coup.Piece.Couleur, coup.LigneArrivee, coup.ColonneArrivee),
@@ -416,6 +419,9 @@ namespace ChessGame.Core.Domain.Models
         /// </summary>
         public bool CoupMettroitRoiEnEchec(Coup coup)
         {
+            if (coup.Piece == null)
+                return false;
+
             // Créer une copie de l'échiquier
             Echiquier copie = Cloner();
 

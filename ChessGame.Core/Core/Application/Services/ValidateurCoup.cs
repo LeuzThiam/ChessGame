@@ -111,6 +111,9 @@ namespace ChessGame.Core.Application.Services
         /// </summary>
         public bool CoupMetRoiEnEchec(Coup coup, Echiquier echiquier)
         {
+            if (coup.Piece == null)
+                return true;
+
             // Créer une copie de l'échiquier
             Echiquier copie = echiquier.Cloner();
 
@@ -130,7 +133,7 @@ namespace ChessGame.Core.Application.Services
         /// </summary>
         public bool ValiderRoque(Coup coup, Echiquier echiquier)
         {
-            Roi roi = coup.Piece as Roi;
+            Roi? roi = coup.Piece as Roi;
             if (roi == null || roi.ADejaBougee)
                 return false;
 
@@ -143,7 +146,7 @@ namespace ChessGame.Core.Application.Services
             if (coup.EstPetitRoque)
             {
                 // Vérifier la tour
-                Piece tourDroite = echiquier.ObtenirPiece(ligne, 7);
+                Piece? tourDroite = echiquier.ObtenirPiece(ligne, 7);
                 if (tourDroite == null || tourDroite.Type != TypePiece.Tour || tourDroite.ADejaBougee)
                     return false;
 
@@ -159,7 +162,7 @@ namespace ChessGame.Core.Application.Services
             else if (coup.EstGrandRoque)
             {
                 // Vérifier la tour
-                Piece tourGauche = echiquier.ObtenirPiece(ligne, 0);
+                Piece? tourGauche = echiquier.ObtenirPiece(ligne, 0);
                 if (tourGauche == null || tourGauche.Type != TypePiece.Tour || tourGauche.ADejaBougee)
                     return false;
 
@@ -183,7 +186,7 @@ namespace ChessGame.Core.Application.Services
         /// </summary>
         public bool ValiderEnPassant(Coup coup, Echiquier echiquier)
         {
-            Pion pion = coup.Piece as Pion;
+            Pion? pion = coup.Piece as Pion;
             if (pion == null)
                 return false;
 
@@ -195,13 +198,13 @@ namespace ChessGame.Core.Application.Services
                 return false;
 
             // Vérifier qu'il y a un pion adverse à côté
-            Piece pionAdjacent = echiquier.ObtenirPiece(pion.Ligne, coup.ColonneArrivee);
+            Piece? pionAdjacent = echiquier.ObtenirPiece(pion.Ligne, coup.ColonneArrivee);
             if (pionAdjacent == null || pionAdjacent.Type != TypePiece.Pion ||
                 pionAdjacent.Couleur == pion.Couleur)
                 return false;
 
             // Vérifier que le dernier coup était un mouvement de deux cases de ce pion
-            Coup dernierCoup = echiquier.EtatPartie?.DernierCoup;
+            Coup? dernierCoup = echiquier.EtatPartie?.DernierCoup;
             if (dernierCoup == null)
                 return false;
 

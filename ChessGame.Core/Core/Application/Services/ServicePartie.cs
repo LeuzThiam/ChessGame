@@ -470,12 +470,17 @@ namespace ChessGame.Core.Application.Services
         {
             // Ici on se contente de poser un flag côté service.
             // La vue peut s'abonner à cette info pour afficher une boîte de dialogue, etc.
+            if (_propositionNulleEnCours)
+                return;
+
             _propositionNulleEnCours = true;
         }
 
         public void AccepterNulle()
         {
             if (EtatPartie == null)
+                return;
+            if (!_propositionNulleEnCours)
                 return;
 
             EtatPartie.DeclarerNulle(TypeFinPartie.Nulle);
@@ -486,6 +491,9 @@ namespace ChessGame.Core.Application.Services
 
         public void RefuserNulle()
         {
+            if (!_propositionNulleEnCours)
+                return;
+
             _propositionNulleEnCours = false;
         }
 
