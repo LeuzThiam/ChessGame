@@ -48,7 +48,7 @@ namespace ChessGame.Core.Application.Services
         /// <summary>
         /// Retire le dernier coup de l'historique
         /// </summary>
-        public Coup RetirerDernierCoup()
+        public Coup? RetirerDernierCoup()
         {
             if (_coups.Count == 0)
                 return null;
@@ -63,7 +63,7 @@ namespace ChessGame.Core.Application.Services
         /// <summary>
         /// Obtient le dernier coup joué
         /// </summary>
-        public Coup ObtenirDernierCoup()
+        public Coup? ObtenirDernierCoup()
         {
             return _coups.Count > 0 ? _coups[_coups.Count - 1] : null;
         }
@@ -79,7 +79,7 @@ namespace ChessGame.Core.Application.Services
         /// <summary>
         /// Obtient un coup à un index spécifique
         /// </summary>
-        public Coup ObtenirCoup(int index)
+        public Coup? ObtenirCoup(int index)
         {
             if (index < 0 || index >= _coups.Count)
                 return null;
@@ -104,7 +104,7 @@ namespace ChessGame.Core.Application.Services
         /// </summary>
         public List<Coup> ObtenirCoupsParJoueur(CouleurPiece couleur)
         {
-            return _coups.Where(c => c.Piece.Couleur == couleur).ToList();
+            return _coups.Where(c => c.Piece?.Couleur == couleur).ToList();
         }
 
         #endregion
@@ -242,8 +242,8 @@ namespace ChessGame.Core.Application.Services
             var stats = new StatistiquesHistorique
             {
                 NombreTotal = _coups.Count,
-                CoupsBlancs = _coups.Count(c => c.Piece.Couleur == CouleurPiece.Blanc),
-                CoupsNoirs = _coups.Count(c => c.Piece.Couleur == CouleurPiece.Noir),
+                CoupsBlancs = _coups.Count(c => c.Piece?.Couleur == CouleurPiece.Blanc),
+                CoupsNoirs = _coups.Count(c => c.Piece?.Couleur == CouleurPiece.Noir),
                 NombreCaptures = _coups.Count(c => c.EstCapture()),
                 NombreEchecs = _coups.Count(c => c.DonneEchec),
                 NombreRoques = _coups.Count(c => c.EstPetitRoque || c.EstGrandRoque),
@@ -261,7 +261,7 @@ namespace ChessGame.Core.Application.Services
 
                 // Pièce la plus active
                 var groupesPieces = _coups
-                    .GroupBy(c => c.Piece.Type)
+                    .GroupBy(c => c.Piece?.Type ?? TypePiece.Aucune)
                     .OrderByDescending(g => g.Count())
                     .FirstOrDefault();
 

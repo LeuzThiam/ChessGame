@@ -96,7 +96,7 @@ namespace ChessGame.Core.Application.Services
         {
             List<Coup> coupsRoque = new List<Coup>();
 
-            Roi roi = echiquier.TrouverRoi(couleur);
+            Roi? roi = echiquier.TrouverRoi(couleur);
             if (roi == null || roi.ADejaBougee)
                 return coupsRoque;
 
@@ -151,7 +151,7 @@ namespace ChessGame.Core.Application.Services
             {
                 if (echiquier.EstPositionValide(ligneDest, col))
                 {
-                    Piece pieceDestination = echiquier.ObtenirPiece(ligneDest, col);
+                    Piece? pieceDestination = echiquier.ObtenirPiece(ligneDest, col);
                     if (pieceDestination != null && pieceDestination.Couleur != pion.Couleur)
                     {
                         AjouterCoupsPromotionPourDestination(pion, ligneDest, col, coupsPromotion, pieceDestination);
@@ -171,6 +171,9 @@ namespace ChessGame.Core.Application.Services
         /// </summary>
         public int EvaluerCoup(Coup coup, Echiquier echiquier)
         {
+            if (coup.Piece == null)
+                return 0;
+
             int score = 0;
 
             // Valeur de base : valeur de la pièce capturée
@@ -236,7 +239,7 @@ namespace ChessGame.Core.Application.Services
         /// Ajoute les 4 coups de promotion possibles (Reine, Tour, Fou, Cavalier)
         /// </summary>
         private void AjouterCoupsPromotionPourDestination(Pion pion, int ligne, int colonne,
-            List<Coup> coups, Piece pieceCapturee = null)
+            List<Coup> coups, Piece? pieceCapturee = null)
         {
             TypePiece[] piecesPromotion =
             {
@@ -270,6 +273,9 @@ namespace ChessGame.Core.Application.Services
         /// </summary>
         private bool EstPieceEnDanger(Coup coup, Echiquier echiquierApres)
         {
+            if (coup.Piece == null)
+                return false;
+
             return echiquierApres.EstCaseAttaquee(
                 coup.LigneArrivee,
                 coup.ColonneArrivee,

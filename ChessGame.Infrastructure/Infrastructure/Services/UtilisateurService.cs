@@ -74,7 +74,7 @@ namespace ChessGame.Infrastructure.Services
 
         public void BasculerInvite(string? nom = "Invité")
         {
-            _session.SetGuest(nom);
+            _session.SetGuest(string.IsNullOrWhiteSpace(nom) ? "Invité" : nom);
         }
 
         private static UtilisateurInfo Map(UtilisateurEntity u) =>

@@ -143,6 +143,8 @@ namespace ChessGame.Core.Application.Services
                 return 0;
 
             int score = 0;
+            if (coup.Piece == null)
+                return score;
 
             // Valeur de la pièce capturée
             if (coup.PieceCapturee != null)

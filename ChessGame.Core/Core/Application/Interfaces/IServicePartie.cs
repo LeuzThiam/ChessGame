@@ -38,10 +38,10 @@ namespace ChessGame.Core.Application.Interfaces
         #endregion
 
         #region Infos échiquier / joueurs
-        Piece ObtenirPiece(int ligne, int colonne);
+        Piece? ObtenirPiece(int ligne, int colonne);
         StatutPartie ObtenirStatutPartie();
-        Joueur ObtenirJoueurActif();
-        Joueur ObtenirJoueurAdverse();
+        Joueur? ObtenirJoueurActif();
+        Joueur? ObtenirJoueurAdverse();
         bool EstPartieTerminee();
         bool EstEnEchec(CouleurPiece couleur);
         #endregion
@@ -72,11 +72,11 @@ namespace ChessGame.Core.Application.Interfaces
         #endregion
 
         #region Événements
-        event EventHandler<Coup> CoupJoue;
-        event EventHandler<Coup> CoupAnnule;
-        event EventHandler<StatutPartie> PartieTerminee;
-        event EventHandler<CouleurPiece> JoueurEnEchec;
-        event EventHandler<StatutPartie> StatutPartieChange;
+        event EventHandler<Coup>? CoupJoue;
+        event EventHandler<Coup>? CoupAnnule;
+        event EventHandler<StatutPartie>? PartieTerminee;
+        event EventHandler<CouleurPiece>? JoueurEnEchec;
+        event EventHandler<StatutPartie>? StatutPartieChange;
         #endregion
     }
 }

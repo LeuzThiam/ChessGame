@@ -76,7 +76,7 @@ namespace ChessGame.Core.Application.Services
                     if (c.PieceCapturee != null)
                     {
                         // Score = valeur pièce capturée * 10 - valeur pièce attaquante
-                        score = c.PieceCapturee.Valeur * 10 - c.Piece.Valeur;
+                        score = c.PieceCapturee.Valeur * 10 - (c.Piece?.Valeur ?? 0);
                     }
                     // Bonus pour échec si on peut le détecter facilement
                     if (c.DonneEchec)
@@ -100,7 +100,7 @@ namespace ChessGame.Core.Application.Services
                 // MVV-LVA : captures de pièces précieuses par des pièces moins précieuses
                 if (c.PieceCapturee != null)
                 {
-                    score = c.PieceCapturee.Valeur * 10 - c.Piece.Valeur;
+                    score = c.PieceCapturee.Valeur * 10 - (c.Piece?.Valeur ?? 0);
                 }
                 
                 // Bonus pour échec
@@ -291,4 +291,3 @@ namespace ChessGame.Core.Application.Services
         }
     }
 }
-

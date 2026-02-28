@@ -18,13 +18,13 @@ namespace ChessGame.Core.Application.Interfaces
         /// Retire le dernier coup de l'historique
         /// </summary>
         /// <returns>Le coup retiré, ou null si l'historique est vide</returns>
-        Coup RetirerDernierCoup();
+        Coup? RetirerDernierCoup();
 
         /// <summary>
         /// Obtient le dernier coup joué
         /// </summary>
         /// <returns>Le dernier coup, ou null si l'historique est vide</returns>
-        Coup ObtenirDernierCoup();
+        Coup? ObtenirDernierCoup();
 
         /// <summary>
         /// Obtient tous les coups de l'historique
@@ -37,7 +37,7 @@ namespace ChessGame.Core.Application.Interfaces
         /// </summary>
         /// <param name="index">Index du coup (0-based)</param>
         /// <returns>Le coup à cet index</returns>
-        Coup ObtenirCoup(int index);
+        Coup? ObtenirCoup(int index);
 
         /// <summary>
         /// Obtient le nombre de coups dans l'historique
@@ -168,7 +168,7 @@ namespace ChessGame.Core.Application.Interfaces
         /// <summary>
         /// Coup le plus long (en nombre de cases)
         /// </summary>
-        public Coup CoupLePlusLong { get; set; }
+        public Coup? CoupLePlusLong { get; set; }
 
         /// <summary>
         /// Pièce la plus active (nombre de coups)

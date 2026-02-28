@@ -122,7 +122,7 @@ namespace ChessGame.Core.Domain.Models.Pieces
         private bool PeutRoquerPetit(Echiquier echiquier, int ligneTour)
         {
             // Vérifier la tour
-            Piece tourDroite = echiquier.ObtenirPiece(ligneTour, 7);
+            Piece? tourDroite = echiquier.ObtenirPiece(ligneTour, 7);
             if (tourDroite == null || tourDroite.Type != TypePiece.Tour || tourDroite.ADejaBougee)
                 return false;
 
@@ -141,7 +141,7 @@ namespace ChessGame.Core.Domain.Models.Pieces
         private bool PeutRoquerGrand(Echiquier echiquier, int ligneTour)
         {
             // Vérifier la tour
-            Piece tourGauche = echiquier.ObtenirPiece(ligneTour, 0);
+            Piece? tourGauche = echiquier.ObtenirPiece(ligneTour, 0);
             if (tourGauche == null || tourGauche.Type != TypePiece.Tour || tourGauche.ADejaBougee)
                 return false;
 

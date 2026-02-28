@@ -21,7 +21,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// État de la partie
         /// </summary>
-        public EtatPartie EtatPartie { get; set; }
+        public EtatPartie? EtatPartie { get; set; }
 
         /// <summary>
         /// Liste de toutes les pièces blanches sur l'échiquier
@@ -66,7 +66,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// Constructeur avec état de partie
         /// </summary>
-        public Echiquier(EtatPartie etatPartie) : this()
+        public Echiquier(EtatPartie? etatPartie) : this()
         {
             EtatPartie = etatPartie;
         }
@@ -348,6 +348,9 @@ namespace ChessGame.Core.Domain.Models
         /// </summary>
         private void ExecuterPromotion(Coup coup)
         {
+            if (coup.Piece == null)
+                return;
+
             Piece nouvellePiece = coup.PiecePromotion switch
             {
                 TypePiece.Reine => new Reine(coup.Piece.Couleur, coup.LigneArrivee, coup.ColonneArrivee),
@@ -416,6 +419,9 @@ namespace ChessGame.Core.Domain.Models
         /// </summary>
         public bool CoupMettroitRoiEnEchec(Coup coup)
         {
+            if (coup.Piece == null)
+                return false;
+
             // Créer une copie de l'échiquier
             Echiquier copie = Cloner();
 

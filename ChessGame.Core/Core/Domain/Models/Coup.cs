@@ -123,7 +123,7 @@ namespace ChessGame.Core.Domain.Models
                 // Capture
                 if (PieceCapturee != null)
                 {
-                    if (Piece.Type == TypePiece.Pion)
+                    if (Piece?.Type == TypePiece.Pion)
                     {
                         notation += (char)('a' + ColonneDepart);
                     }
@@ -246,7 +246,7 @@ namespace ChessGame.Core.Domain.Models
             return NotationAlgebrique;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is Coup autreCoup)
             {

@@ -68,6 +68,7 @@ namespace ChessGame.Core.Domain.Models
         /// </summary>
         public Joueur()
         {
+            Nom = string.Empty;
             TempsRestant = TimeSpan.FromMinutes(10); // 10 minutes par défaut
             PeutRoquerPetit = true;
             PeutRoquerGrand = true;
@@ -208,7 +209,7 @@ namespace ChessGame.Core.Domain.Models
             return $"{Nom} ({Couleur}) - Score: {Score}, Coups: {NombreCoups}";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is Joueur autreJoueur)
             {

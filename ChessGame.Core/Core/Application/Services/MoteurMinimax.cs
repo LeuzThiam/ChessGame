@@ -267,7 +267,7 @@ namespace ChessGame.Core.Application.Services
                 if (c.PieceCapturee != null)
                 {
                     // Score = valeur de la pièce capturée * 10 - valeur de la pièce attaquante
-                    score = c.PieceCapturee.Valeur * 10 - c.Piece.Valeur;
+                    score = c.PieceCapturee.Valeur * 10 - (c.Piece?.Valeur ?? 0);
                 }
 
                 // Bonus pour les coups qui donnent échec (sans cloner pour éviter la lenteur)

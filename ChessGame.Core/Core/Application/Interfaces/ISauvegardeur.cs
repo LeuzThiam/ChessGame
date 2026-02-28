@@ -48,7 +48,7 @@ namespace ChessGame.Core.Application.Interfaces
         /// <summary>
         /// Charge un echiquier depuis un fichier FEN.
         /// </summary>
-        Echiquier ChargerFEN(string cheminFichier);
+        Echiquier? ChargerFEN(string cheminFichier);
 
         /// <summary>
         /// Exporte l'etat de la partie au format FEN.
@@ -58,6 +58,6 @@ namespace ChessGame.Core.Application.Interfaces
         /// <summary>
         /// Importe un echiquier a partir d'une chaine FEN.
         /// </summary>
-        Echiquier ImporterDepuisFEN(string fenString);
+        Echiquier? ImporterDepuisFEN(string fenString);
     }
 }
