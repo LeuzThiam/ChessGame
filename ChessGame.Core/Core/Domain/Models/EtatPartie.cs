@@ -39,7 +39,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// Dernier coup joué
         /// </summary>
-        public Coup DernierCoup => HistoriqueCoups?.LastOrDefault();
+        public Coup? DernierCoup => HistoriqueCoups.LastOrDefault();
 
         /// <summary>
         /// Numéro du coup actuel
@@ -77,7 +77,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// Joueur gagnant (null en cas de nulle ou partie en cours)
         /// </summary>
-        public Joueur Gagnant { get; set; }
+        public Joueur? Gagnant { get; set; }
 
         /// <summary>
         /// Historique des positions (notation FEN) pour détecter la répétition triple
@@ -111,6 +111,9 @@ namespace ChessGame.Core.Domain.Models
             CompteurDemiCoups = 0;
             DateDebut = DateTime.Now;
             TypeFin = TypeFinPartie.Aucune;
+            JoueurBlanc = new Joueur("Blancs", CouleurPiece.Blanc);
+            JoueurNoir = new Joueur("Noirs", CouleurPiece.Noir);
+            JoueurActif = JoueurBlanc;
 
         }
 
@@ -139,7 +142,7 @@ namespace ChessGame.Core.Domain.Models
             HistoriqueCoups.Add(coup);
 
             // Incrémenter le compteur de demi-coups
-            if (coup.Piece.Type == TypePiece.Pion || coup.EstCapture())
+            if (coup.Piece?.Type == TypePiece.Pion || coup.EstCapture())
             {
                 CompteurDemiCoups = 0; // Réinitialiser le compteur
             }
@@ -161,7 +164,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// Annule le dernier coup
         /// </summary>
-        public Coup AnnulerDernierCoup()
+        public Coup? AnnulerDernierCoup()
         {
             if (HistoriqueCoups.Count == 0)
                 return null;
@@ -258,7 +261,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// Termine la partie
         /// </summary>
-        public void TerminerPartie(StatutPartie statut, TypeFinPartie typeFin, Joueur gagnant = null)
+        public void TerminerPartie(StatutPartie statut, TypeFinPartie typeFin, Joueur? gagnant = null)
         {
             Statut = statut;
             TypeFin = typeFin;
@@ -340,8 +343,8 @@ namespace ChessGame.Core.Domain.Models
             Gagnant = null;
             JoueurActif = JoueurBlanc;
 
-            JoueurBlanc?.Reinitialiser();
-            JoueurNoir?.Reinitialiser();
+            JoueurBlanc.Reinitialiser();
+            JoueurNoir.Reinitialiser();
         }
 
         /// <summary>
@@ -351,9 +354,9 @@ namespace ChessGame.Core.Domain.Models
         {
             return new EtatPartie
             {
-                JoueurBlanc = JoueurBlanc?.Cloner(),
-                JoueurNoir = JoueurNoir?.Cloner(),
-                JoueurActif = JoueurActif?.Cloner(),
+                JoueurBlanc = JoueurBlanc.Cloner(),
+                JoueurNoir = JoueurNoir.Cloner(),
+                JoueurActif = JoueurActif.Cloner(),
                 Statut = this.Statut,
                 HistoriqueCoups = new List<Coup>(HistoriqueCoups.Select(c => c.Cloner())),
                 NumeroCoup = this.NumeroCoup,
@@ -361,7 +364,7 @@ namespace ChessGame.Core.Domain.Models
                 DateDebut = this.DateDebut,
                 DateFin = this.DateFin,
                 TypeFin = this.TypeFin,
-                Gagnant = this.Gagnant?.Cloner(),
+                Gagnant = Gagnant?.Cloner(),
                 HistoriquePositions = new Dictionary<string, int>(HistoriquePositions)
             };
         }

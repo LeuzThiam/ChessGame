@@ -17,7 +17,7 @@ namespace ChessGame.Core.Application.Services
         private readonly GenerateurCoups _generateurCoups;
         private readonly IHistoriqueCoups _historique;
         private readonly ISauvegardeur _sauvegardeur;
-        private System.Timers.Timer _timerJeu;
+        private System.Timers.Timer? _timerJeu;
         private readonly IPartieRepository? _partieRepository;
 
 
@@ -35,8 +35,8 @@ namespace ChessGame.Core.Application.Services
 
         #region Propriétés
 
-        public Echiquier Echiquier { get; private set; }
-        public EtatPartie EtatPartie { get; private set; }
+        public Echiquier Echiquier { get; private set; } = null!;
+        public EtatPartie EtatPartie { get; private set; } = null!;
 
         public IHistoriqueCoups Historique => _historique;
 
@@ -46,11 +46,11 @@ namespace ChessGame.Core.Application.Services
 
         #region Événements
 
-        public event EventHandler<Coup> CoupJoue;
-        public event EventHandler<Coup> CoupAnnule;
-        public event EventHandler<StatutPartie> PartieTerminee;
-        public event EventHandler<CouleurPiece> JoueurEnEchec;
-        public event EventHandler<StatutPartie> StatutPartieChange;
+        public event EventHandler<Coup>? CoupJoue;
+        public event EventHandler<Coup>? CoupAnnule;
+        public event EventHandler<StatutPartie>? PartieTerminee;
+        public event EventHandler<CouleurPiece>? JoueurEnEchec;
+        public event EventHandler<StatutPartie>? StatutPartieChange;
 
         #endregion
 
@@ -206,7 +206,7 @@ namespace ChessGame.Core.Application.Services
             if (piece.Couleur != EtatPartie.JoueurActif.Couleur)
                 return false;
 
-            Piece pieceCapturee = Echiquier.ObtenirPiece(ligneArrivee, colonneArrivee);
+            Piece? pieceCapturee = Echiquier.ObtenirPiece(ligneArrivee, colonneArrivee);
             Coup coup = new(piece, ligneDepart, colonneDepart, ligneArrivee, colonneArrivee, pieceCapturee);
 
             DetecterCoupsSpeciaux(coup, piece);
@@ -233,6 +233,9 @@ namespace ChessGame.Core.Application.Services
 
             // Vérification stricte du tour
             var joueurActif = EtatPartie.JoueurActif;
+
+            if (coup.Piece == null)
+                return false;
 
             if (coup.Piece.Couleur != joueurActif.Couleur)
                 return false;
@@ -368,7 +371,7 @@ namespace ChessGame.Core.Application.Services
             if (EtatPartie == null || Echiquier == null)
                 return new List<Coup>();
 
-            Piece piece = Echiquier.ObtenirPiece(ligne, colonne);
+            Piece? piece = Echiquier.ObtenirPiece(ligne, colonne);
             if (piece == null)
                 return new List<Coup>();
 
@@ -389,7 +392,7 @@ namespace ChessGame.Core.Application.Services
             {
                 for (int colonne = 0; colonne < 8; colonne++)
                 {
-                    Piece p = Echiquier.ObtenirPiece(ligne, colonne);
+                    Piece? p = Echiquier.ObtenirPiece(ligne, colonne);
                     if (p != null && p.Couleur == EtatPartie.JoueurActif.Couleur)
                     {
                         result.AddRange(_validateurCoup.ObtenirCoupsLegaux(p, Echiquier));
@@ -405,11 +408,11 @@ namespace ChessGame.Core.Application.Services
             if (EtatPartie == null || Echiquier == null)
                 return false;
 
-            Piece piece = Echiquier.ObtenirPiece(ligneDepart, colonneDepart);
+            Piece? piece = Echiquier.ObtenirPiece(ligneDepart, colonneDepart);
             if (piece == null)
                 return false;
 
-            Piece pieceCapturee = Echiquier.ObtenirPiece(ligneArrivee, colonneArrivee);
+            Piece? pieceCapturee = Echiquier.ObtenirPiece(ligneArrivee, colonneArrivee);
             Coup coup = new(piece, ligneDepart, colonneDepart, ligneArrivee, colonneArrivee, pieceCapturee);
 
             DetecterCoupsSpeciaux(coup, piece);
@@ -426,7 +429,7 @@ namespace ChessGame.Core.Application.Services
 
         #region Informations sur l'échiquier / joueurs
 
-        public Piece ObtenirPiece(int ligne, int colonne)
+        public Piece? ObtenirPiece(int ligne, int colonne)
         {
             return Echiquier?.ObtenirPiece(ligne, colonne);
         }
@@ -436,12 +439,12 @@ namespace ChessGame.Core.Application.Services
             return EtatPartie?.Statut ?? StatutPartie.EnCours;
         }
 
-        public Joueur ObtenirJoueurActif()
+        public Joueur? ObtenirJoueurActif()
         {
             return EtatPartie?.JoueurActif;
         }
 
-        public Joueur ObtenirJoueurAdverse()
+        public Joueur? ObtenirJoueurAdverse()
         {
             return EtatPartie?.ObtenirJoueurAdverse();
         }
@@ -656,7 +659,7 @@ namespace ChessGame.Core.Application.Services
             {
                 for (int colonne = 0; colonne < 8; colonne++)
                 {
-                    Piece p = Echiquier.ObtenirPiece(ligne, colonne);
+                    Piece? p = Echiquier.ObtenirPiece(ligne, colonne);
                     if (p == null || p.Couleur != couleur)
                         continue;
 
