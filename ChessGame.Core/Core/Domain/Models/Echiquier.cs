@@ -21,7 +21,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// État de la partie
         /// </summary>
-        public EtatPartie EtatPartie { get; set; }
+        public EtatPartie? EtatPartie { get; set; }
 
         /// <summary>
         /// Liste de toutes les pièces blanches sur l'échiquier
@@ -66,7 +66,7 @@ namespace ChessGame.Core.Domain.Models
         /// <summary>
         /// Constructeur avec état de partie
         /// </summary>
-        public Echiquier(EtatPartie etatPartie) : this()
+        public Echiquier(EtatPartie? etatPartie) : this()
         {
             EtatPartie = etatPartie;
         }

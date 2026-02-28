@@ -140,7 +140,7 @@ namespace ChessGame.Core.Domain.Models
                 return $"Case {NotationAlgebrique} ({Piece})";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is Case autreCase)
             {

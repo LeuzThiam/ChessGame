@@ -111,7 +111,7 @@ namespace ChessGame.Core.Domain.Models.Pieces
         /// </summary>
         protected bool EstPieceAdverse(int ligne, int colonne, Echiquier echiquier)
         {
-            Piece piece = echiquier.ObtenirPiece(ligne, colonne);
+            Piece? piece = echiquier.ObtenirPiece(ligne, colonne);
             return piece != null && piece.Couleur != this.Couleur;
         }
 
@@ -120,7 +120,7 @@ namespace ChessGame.Core.Domain.Models.Pieces
         /// </summary>
         protected bool EstPieceAlliee(int ligne, int colonne, Echiquier echiquier)
         {
-            Piece piece = echiquier.ObtenirPiece(ligne, colonne);
+            Piece? piece = echiquier.ObtenirPiece(ligne, colonne);
             return piece != null && piece.Couleur == this.Couleur;
         }
 
@@ -131,7 +131,7 @@ namespace ChessGame.Core.Domain.Models.Pieces
         {
             if (EstCoupValide(ligneDestination, colonneDestination, echiquier))
             {
-                Piece pieceCapturee = echiquier.ObtenirPiece(ligneDestination, colonneDestination);
+                Piece? pieceCapturee = echiquier.ObtenirPiece(ligneDestination, colonneDestination);
                 coups.Add(new Coup(this, Ligne, Colonne, ligneDestination, colonneDestination, pieceCapturee));
             }
         }

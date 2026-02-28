@@ -168,7 +168,7 @@ namespace ChessGame.Core.Application.Interfaces
         /// <summary>
         /// Coup le plus long (en nombre de cases)
         /// </summary>
-        public Coup CoupLePlusLong { get; set; }
+        public Coup? CoupLePlusLong { get; set; }
 
         /// <summary>
         /// Pièce la plus active (nombre de coups)
